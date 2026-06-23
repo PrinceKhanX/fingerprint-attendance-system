@@ -120,6 +120,12 @@ function LoginPageContent() {
         </form>
 
         <p className="mt-6 text-center text-slate-600 text-sm">
+          <Link href="/guardian/login" className="text-emerald-600 hover:underline font-semibold">
+            Guardian portal login
+          </Link>
+        </p>
+
+        <p className="mt-3 text-center text-slate-600 text-sm">
           Don't have an account?{' '}
           <Link href="/register" className="text-blue-600 hover:underline font-semibold">
             Register
@@ -132,6 +138,7 @@ function LoginPageContent() {
             <p><strong>Admin:</strong> admin@example.com / admin123</p>
             <p><strong>Teacher:</strong> teacher@example.com / teacher123</p>
             <p><strong>Student:</strong> student@example.com / student123</p>
+            <p><strong>Guardian:</strong> guardian@example.com / guardian123</p>
           </div>
         </div>
       </div>

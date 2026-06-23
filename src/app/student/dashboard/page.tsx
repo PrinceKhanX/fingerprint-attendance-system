@@ -1,14 +1,120 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import PushNotifications from '@/components/PushNotifications'
+
+type DayStatus = 'PRESENT' | 'LATE' | 'ABSENT'
+
+interface ClassItem {
+  id: string
+  name: string
+  schedule: string
+  teacher: { name: string; email: string; employee_id: string }
+}
+
+interface AttendanceData {
+  student: { name: string; student_id: string }
+  month: string
+  stats: {
+    enrolledClasses: number
+    present: number
+    late: number
+    absent: number
+    totalRecords: number
+    attendancePercentage: number
+  }
+  calendar: Record<string, DayStatus>
+  records: {
+    id: string
+    date: string
+    status: DayStatus
+    className: string
+    marked_by: string
+  }[]
+}
+
+const STATUS_COLORS: Record<DayStatus, string> = {
+  PRESENT: 'bg-green-500',
+  LATE: 'bg-yellow-400',
+  ABSENT: 'bg-red-500',
+}
+
+const STATUS_BG: Record<DayStatus, string> = {
+  PRESENT: 'bg-green-50 border-green-200',
+  LATE: 'bg-yellow-50 border-yellow-200',
+  ABSENT: 'bg-red-50 border-red-200',
+}
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+
+function currentMonth() {
+  const now = new Date()
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+}
+
+function shiftMonth(monthStr: string, delta: number) {
+  const [year, month] = monthStr.split('-').map(Number)
+  const d = new Date(year, month - 1 + delta, 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
 
 export default function StudentDashboard() {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const [month, setMonth] = useState(currentMonth())
+  const [data, setData] = useState<AttendanceData | null>(null)
+  const [classes, setClasses] = useState<ClassItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [logoutLoading, setLogoutLoading] = useState(false)
+
+  const loadData = useCallback(async () => {
+    setLoading(true)
+    try {
+      const [attRes, classRes] = await Promise.all([
+        fetch(`/api/student/attendance?month=${month}`),
+        fetch('/api/student/classes'),
+      ])
+      if (attRes.status === 401) {
+        router.push('/login')
+        return
+      }
+      const json = await attRes.json()
+      setData(json)
+      if (classRes.ok) {
+        const classJson = await classRes.json()
+        setClasses(classJson.classes ?? [])
+      }
+    } catch (error) {
+      console.error('Failed to load attendance:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [month, router])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
+
+  const calendarGrid = useMemo(() => {
+    const [year, monthNum] = month.split('-').map(Number)
+    const firstDay = new Date(year, monthNum - 1, 1).getDay()
+    const daysInMonth = new Date(year, monthNum, 0).getDate()
+
+    const cells: { day: number | null; dateKey: string | null }[] = []
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, dateKey: null })
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateKey = `${year}-${String(monthNum).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+      cells.push({ day: d, dateKey })
+    }
+    return cells
+  }, [month])
 
   const handleLogout = async () => {
-    setLoading(true)
+    setLogoutLoading(true)
     try {
       await fetch('/api/auth/logout', { method: 'POST' })
       router.push('/login')
@@ -17,55 +123,222 @@ export default function StudentDashboard() {
     }
   }
 
+  const [year, monthNum] = month.split('-').map(Number)
+
   return (
     <main className="min-h-screen bg-slate-50">
       <nav className="bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-slate-900">Student Dashboard</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Student Dashboard</h1>
+            {data && (
+              <p className="text-sm text-slate-500 mt-1">
+                {data.student.name} · {data.student.student_id}
+              </p>
+            )}
+          </div>
           <button
             onClick={handleLogout}
-            disabled={loading}
+            disabled={logoutLoading}
             className="px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 disabled:bg-slate-400 transition"
           >
-            {loading ? 'Logging out...' : 'Logout'}
+            {logoutLoading ? 'Logging out...' : 'Logout'}
           </button>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {[
-            { title: 'Enrolled Classes', value: '6', icon: '📚' },
-            { title: 'Attendance Rate', value: '92%', icon: '✓' },
-            { title: 'Days Absent', value: '2', icon: '❌' },
-          ].map((card) => (
-            <div key={card.title} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div className="text-4xl mb-3">{card.icon}</div>
-              <p className="text-slate-600 text-sm">{card.title}</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{card.value}</p>
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+        {loading ? (
+          <div className="text-center py-12 text-slate-500">Loading attendance...</div>
+        ) : data ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { title: 'Enrolled Classes', value: data.stats.enrolledClasses, icon: '📚' },
+                {
+                  title: 'Attendance Rate',
+                  value: `${data.stats.attendancePercentage}%`,
+                  icon: '✓',
+                },
+                { title: 'Days Absent', value: data.stats.absent, icon: '❌' },
+              ].map((card) => (
+                <div
+                  key={card.title}
+                  className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="text-4xl mb-3">{card.icon}</div>
+                  <p className="text-slate-600 text-sm">{card.title}</p>
+                  <p className="text-3xl font-bold text-slate-900 mt-2">{card.value}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-slate-900 mb-4">Student Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { label: 'View My Attendance', icon: '📊' },
-              { label: 'My Classes', icon: '📚' },
-              { label: 'Attendance Summary', icon: '📈' },
-              { label: 'Profile Settings', icon: '⚙️' },
-            ].map((action) => (
-              <button
-                key={action.label}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"
-              >
-                <span className="text-2xl">{action.icon}</span>
-                <span className="font-medium text-slate-700">{action.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+            <PushNotifications role="STUDENT" />
+
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-slate-900 mb-4">Class Timetable</h2>
+              {classes.length === 0 ? (
+                <p className="text-sm text-slate-500">No enrolled classes</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {classes.map((c) => (
+                    <div key={c.id} className="rounded-lg border border-slate-100 px-4 py-4">
+                      <p className="font-semibold text-slate-900">{c.name}</p>
+                      <p className="text-sm text-indigo-600 mt-1">{c.schedule}</p>
+                      <p className="text-sm text-slate-500 mt-2">
+                        Teacher: {c.teacher.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-lg font-semibold text-slate-900">
+                    {MONTH_NAMES[monthNum - 1]} {year}
+                  </h2>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setMonth((m) => shiftMonth(m, -1))}
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm"
+                    >
+                      ← Prev
+                    </button>
+                    <button
+                      onClick={() => setMonth(currentMonth())}
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm"
+                    >
+                      Today
+                    </button>
+                    <button
+                      onClick={() => setMonth((m) => shiftMonth(m, 1))}
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm"
+                    >
+                      Next →
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                  {WEEKDAYS.map((d) => (
+                    <div key={d} className="text-center text-xs font-medium text-slate-500 py-1">
+                      {d}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-7 gap-1">
+                  {calendarGrid.map((cell, i) => {
+                    if (!cell.day || !cell.dateKey) {
+                      return <div key={`empty-${i}`} className="aspect-square" />
+                    }
+
+                    const status = data.calendar[cell.dateKey]
+                    const isToday = cell.dateKey === new Date().toISOString().slice(0, 10)
+
+                    return (
+                      <div
+                        key={cell.dateKey}
+                        className={`aspect-square rounded-lg border flex flex-col items-center justify-center relative ${
+                          status
+                            ? STATUS_BG[status]
+                            : isToday
+                              ? 'bg-blue-50 border-blue-200'
+                              : 'border-slate-100'
+                        }`}
+                        title={
+                          status
+                            ? `${cell.dateKey}: ${status}`
+                            : cell.dateKey
+                        }
+                      >
+                        <span
+                          className={`text-sm ${isToday ? 'font-bold text-blue-700' : 'text-slate-700'}`}
+                        >
+                          {cell.day}
+                        </span>
+                        {status && (
+                          <span
+                            className={`w-2.5 h-2.5 rounded-full mt-0.5 ${STATUS_COLORS[status]}`}
+                          />
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className="flex gap-4 mt-4 text-sm text-slate-600">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-green-500" /> Present
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-yellow-400" /> Late
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-red-500" /> Absent
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="text-lg font-semibold text-slate-900 mb-4">Summary</h2>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Present', count: data.stats.present, color: 'text-green-600' },
+                    { label: 'Late', count: data.stats.late, color: 'text-yellow-600' },
+                    { label: 'Absent', count: data.stats.absent, color: 'text-red-600' },
+                  ].map((row) => (
+                    <div key={row.label} className="flex justify-between items-center">
+                      <span className="text-slate-600">{row.label}</span>
+                      <span className={`font-semibold ${row.color}`}>{row.count}</span>
+                    </div>
+                  ))}
+                  <div className="border-t border-slate-200 pt-3 flex justify-between items-center">
+                    <span className="font-medium text-slate-900">Overall Rate</span>
+                    <span className="text-2xl font-bold text-blue-600">
+                      {data.stats.attendancePercentage}%
+                    </span>
+                  </div>
+                </div>
+
+                <h3 className="text-sm font-semibold text-slate-900 mt-6 mb-3">Recent Records</h3>
+                {data.records.length === 0 ? (
+                  <p className="text-sm text-slate-500">No attendance records yet</p>
+                ) : (
+                  <ul className="space-y-2 max-h-48 overflow-y-auto">
+                    {data.records.slice(0, 8).map((r) => (
+                      <li
+                        key={r.id}
+                        className="text-sm flex justify-between items-center py-1.5 border-b border-slate-50"
+                      >
+                        <div>
+                          <p className="text-slate-900">{r.className}</p>
+                          <p className="text-xs text-slate-500">{r.date}</p>
+                        </div>
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-medium ${
+                            r.status === 'PRESENT'
+                              ? 'bg-green-100 text-green-700'
+                              : r.status === 'LATE'
+                                ? 'bg-yellow-100 text-yellow-700'
+                                : 'bg-red-100 text-red-700'
+                          }`}
+                        >
+                          {r.status}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-12 text-slate-500">Failed to load data</div>
+        )}
       </div>
     </main>
   )
