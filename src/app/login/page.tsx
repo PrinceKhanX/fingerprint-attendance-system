@@ -145,30 +145,38 @@ function LoginPageContent() {
         </Button>
       </div>
 
-      <div className={`w-full max-w-[440px] relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        <div className="bg-white shadow-2xl shadow-slate-300/50 rounded-[20px] overflow-hidden border border-slate-200/50">
-          {/* Top accent bar */}
-          <div className="h-1.5 transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
+      <div className={`w-full max-w-[500px] relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className="bg-white shadow-2xl shadow-slate-300/50 rounded-[24px] overflow-hidden border border-slate-200/50">
+          {/* Decorative corner accent */}
+          <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
+            <svg viewBox="0 0 100 100" className="w-full h-full" style={{ fill: currentColor.primary }}>
+              <path d="M0 100 L100 100 L100 0 Z" />
+            </svg>
+          </div>
 
-          <div className="p-12 space-y-8">
+          {/* Top accent bar */}
+          <div className="h-2 transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
+
+          <div className="p-14 space-y-10">
             {/* Tiny brand mark */}
             <div className="text-center">
-              <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors">
-                <Fingerprint className="w-3 h-3" />
-                <span>Fingerprint Attendance</span>
+              <Link href="/" className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors">
+                <Fingerprint className="w-3.5 h-3.5" />
+                <span className="font-medium">Fingerprint Attendance</span>
               </Link>
             </div>
 
             {/* Header */}
-            <div className="text-center space-y-3">
-              {/* Small fingerprint icon */}
-              <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 mb-2">
-                <Fingerprint className="w-4 h-4 text-slate-500" />
+            <div className="text-center space-y-4">
+              {/* Large fingerprint icon with glow */}
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 mb-3 relative">
+                <div className="absolute inset-0 rounded-2xl opacity-20 blur-xl transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
+                <Fingerprint className="w-8 h-8 text-slate-600 relative z-10" />
               </div>
-              <h1 className="text-3xl font-bold transition-all duration-300" style={{ color: currentColor.primary }}>
+              <h1 className="text-4xl font-bold transition-all duration-300" style={{ color: currentColor.primary }}>
                 {roleTitles[role as keyof typeof roleTitles] || 'Login'}
               </h1>
-              <p className="text-sm text-slate-500">Sign in to your account</p>
+              <p className="text-base text-slate-500 font-medium">Sign in to your account</p>
             </div>
 
             {/* Error alert */}
@@ -179,12 +187,12 @@ function LoginPageContent() {
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold text-slate-700">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Label htmlFor="email" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Email</Label>
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
                   <Input
                     id="email"
                     type="email"
@@ -192,16 +200,16 @@ function LoginPageContent() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="admin@example.com"
                     required
-                    className={`pl-12 h-12 px-4 border-2 rounded-xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base`}
+                    className={`pl-12 h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
                   />
                 </div>
               </div>
 
               {/* Password field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-semibold text-slate-700">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Label htmlFor="password" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Password</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
                   <Input
                     id="password"
                     type="password"
@@ -209,16 +217,16 @@ function LoginPageContent() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className={`pl-12 h-12 px-4 border-2 rounded-xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base`}
+                    className={`pl-12 h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
                   />
                 </div>
               </div>
 
               {/* Role dropdown */}
               <div className="space-y-2">
-                <Label htmlFor="role" className="text-sm font-semibold text-slate-700">Role</Label>
+                <Label htmlFor="role" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Role</Label>
                 <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger id="role" className={`h-12 px-4 border-2 rounded-xl ${currentColor.border} ${currentColor.hoverBorder} focus:ring-2 ${currentColor.focus} transition-all duration-300 text-base`}>
+                  <SelectTrigger id="role" className={`h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}>
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -231,23 +239,23 @@ function LoginPageContent() {
               </div>
 
               {/* Remember me checkbox */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <input
                   type="checkbox"
                   id="remember"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 transition-all duration-200"
+                  className="w-5 h-5 rounded-lg border-slate-300 text-blue-600 focus:ring-blue-500 transition-all duration-200"
                   style={{ accentColor: currentColor.primary }}
                 />
-                <Label htmlFor="remember" className="text-sm text-slate-600 cursor-pointer">Remember me</Label>
+                <Label htmlFor="remember" className="text-sm text-slate-600 cursor-pointer font-medium">Remember me</Label>
               </div>
 
               {/* Login button */}
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-base hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full h-14 rounded-2xl text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 text-lg hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: currentColor.primary }}
               >
                 {loading ? (
@@ -268,22 +276,22 @@ function LoginPageContent() {
             </form>
 
             {/* Links */}
-            <div className="space-y-3 pt-4 border-t border-slate-200">
+            <div className="space-y-4 pt-6 border-t border-slate-200">
               <p className="text-center text-sm text-slate-500">
-                <Link href="/guardian/login" className="hover:underline transition-colors" style={{ color: currentColor.primary }}>
+                <Link href="/guardian/login" className="hover:underline transition-colors font-semibold" style={{ color: currentColor.primary }}>
                   Guardian portal login
                 </Link>
               </p>
 
               <p className="text-center text-sm text-slate-500">
                 Don't have an account?{' '}
-                <Link href="/register" className="font-semibold hover:underline transition-colors" style={{ color: currentColor.primary }}>
+                <Link href="/register" className="font-bold hover:underline transition-colors" style={{ color: currentColor.primary }}>
                   Register
                 </Link>
               </p>
 
               <p className="text-center text-sm">
-                <Link href="/" className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center gap-1">
+                <Link href="/" className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center gap-1 font-medium">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
@@ -293,32 +301,32 @@ function LoginPageContent() {
             </div>
 
             {/* Demo credentials */}
-            <div className="pt-4 border-t border-slate-200">
+            <div className="pt-6 border-t border-slate-200">
               <button
                 type="button"
                 onClick={() => setShowDemo(!showDemo)}
-                className="w-full flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors py-2"
+                className="w-full flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors py-2 font-medium"
               >
                 <span>Demo Credentials</span>
                 <ChevronRight className={`h-3 w-3 transition-transform ${showDemo ? 'rotate-90' : ''}`} />
               </button>
               {showDemo && (
-                <div className="mt-3 space-y-2 text-xs text-slate-600 bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <div className="mt-4 space-y-3 text-sm text-slate-600 bg-slate-50 rounded-2xl p-5 border border-slate-200">
                   <div className="flex justify-between items-center">
-                    <span className="font-semibold" style={{ color: roleColors.ADMIN.primary }}>Admin:</span>
-                    <span>admin@example.com / admin123</span>
+                    <span className="font-bold" style={{ color: roleColors.ADMIN.primary }}>Admin:</span>
+                    <span className="font-mono">admin@example.com / admin123</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="font-semibold" style={{ color: roleColors.TEACHER.primary }}>Teacher:</span>
-                    <span>teacher@example.com / teacher123</span>
+                    <span className="font-bold" style={{ color: roleColors.TEACHER.primary }}>Teacher:</span>
+                    <span className="font-mono">teacher@example.com / teacher123</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="font-semibold" style={{ color: roleColors.STUDENT.primary }}>Student:</span>
-                    <span>student@example.com / student123</span>
+                    <span className="font-bold" style={{ color: roleColors.STUDENT.primary }}>Student:</span>
+                    <span className="font-mono">student@example.com / student123</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="font-semibold" style={{ color: roleColors.GUARDIAN.primary }}>Guardian:</span>
-                    <span>guardian@example.com / guardian123</span>
+                    <span className="font-bold" style={{ color: roleColors.GUARDIAN.primary }}>Guardian:</span>
+                    <span className="font-mono">guardian@example.com / guardian123</span>
                   </div>
                 </div>
               )}
