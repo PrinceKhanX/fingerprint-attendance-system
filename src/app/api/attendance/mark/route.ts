@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
 
   const student = await prisma.student.findUnique({
     where: { fingerprint_id },
+    include: { user: { select: { name: true, email: true } } }
   })
 
   if (!student) {
@@ -76,6 +77,22 @@ export async function POST(request: NextRequest) {
       class: { select: { id: true, name: true } },
     },
   })
+
+  // Emit socket event to connected teacher dashboards
+  if (global.io) {
+    global.io.to(`class:${class_id}`).emit('attendance-marked', {
+      studentId: student.id,
+      studentName: student.user.name,
+      studentEmail: student.user.email,
+      student_id: student.student_id,
+      status: 'PRESENT',
+      marked_by: 'SENSOR',
+      timestamp: attendance.timestamp,
+      classId: class_id,
+      className: classRecord.name,
+    })
+    console.log(`Emitted attendance-marked event for class:${class_id}`)
+  }
 
   return NextResponse.json({ attendance }, { status: 201 })
 }

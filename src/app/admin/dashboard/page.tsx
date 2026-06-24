@@ -1,6 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { DashboardSidebar } from '@/components/dashboard-sidebar'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 interface UserRecord {
   id: string
@@ -65,6 +69,16 @@ export default function AdminDashboard() {
   const [formState, setFormState] = useState<any>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [userName, setUserName] = useState('')
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
 
   const roleOptions = useMemo(
     () => [
@@ -294,204 +308,242 @@ export default function AdminDashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="min-h-screen bg-slate-50 flex">
+      <DashboardSidebar role="ADMIN" userName={userName} onLogout={handleLogout} />
+      
+      <main className="flex-1 lg:ml-64 p-4 lg:p-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header */}
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
             <p className="text-slate-600">Manage users, classes, enrollments, and fingerprint registrations.</p>
           </div>
+
+          {/* Stat Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-600">Total Users</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-slate-900">{users.length}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-600">Total Classes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-slate-900">{classes.length}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-600">Total Students</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-slate-900">{students.length}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-600">Total Enrollments</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-slate-900">{enrollments.length}</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Error */}
+          {error && <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-red-700">{error}</div>}
+
+          {/* Tabs */}
           <div className="flex flex-wrap gap-2">
             {['users', 'classes', 'enrollments', 'fingerprint'].map((tab) => (
-              <button
+              <Button
                 key={tab}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  activeTab === tab ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
+                variant={activeTab === tab ? 'default' : 'outline'}
                 onClick={() => setActiveTab(tab as any)}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
+              </Button>
             ))}
           </div>
-        </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {error && <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 text-red-700">{error}</div>}
-
-        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-slate-900">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
-            <p className="text-slate-600">
-              {activeTab === 'users' && 'Create and manage teacher and student accounts.'}
-              {activeTab === 'classes' && 'Create classes and assign teachers.'}
-              {activeTab === 'enrollments' && 'Assign students to classes.'}
-              {activeTab === 'fingerprint' && 'Register fingerprint IDs for students.'}
-            </p>
-          </div>
-          <button
-            className="rounded-lg bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-700 transition"
-            onClick={() => {
-              if (activeTab === 'users') openUserModal('create')
-              if (activeTab === 'classes') openClassModal('create')
-              if (activeTab === 'enrollments') openEnrollmentModal()
-              if (activeTab === 'fingerprint') openFingerprintModal(students[0])
-            }}
-          >
-            Add {activeTab === 'users' ? 'User' : activeTab === 'classes' ? 'Class' : activeTab === 'enrollments' ? 'Enrollment' : 'Student'}
-          </button>
-        </div>
-
-        {activeTab === 'users' && (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Email</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Role</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Details</th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 text-sm text-slate-700">{user.name}</td>
-                    <td className="px-6 py-4 text-sm text-slate-700">{user.email}</td>
-                    <td className="px-6 py-4 text-sm text-slate-700">{user.role}</td>
-                    <td className="px-6 py-4 text-sm text-slate-700">
-                      {user.role === 'STUDENT' ? (
-                        <div className="space-y-1 text-sm">
-                          <div>Student ID: {user.student?.student_id}</div>
-                          <div>Fingerprint: {user.student?.fingerprint_id || 'N/A'}</div>
-                          <div>Guardian: {user.student?.guardian_email}</div>
-                        </div>
-                      ) : user.role === 'TEACHER' ? (
-                        <div className="text-sm">Employee ID: {user.teacher?.employee_id}</div>
-                      ) : (
-                        'Admin'
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => openUserModal('edit', user)}
-                        className="rounded-lg bg-slate-100 px-3 py-1 text-slate-700 hover:bg-slate-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete('user', user.id)}
-                        className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
-                      >
-                        Delete
-                      </button>
-                      {user.role === 'STUDENT' && (
-                        <button
-                          onClick={() => openFingerprintModal(user)}
-                          className="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
-                        >
-                          Fingerprint
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === 'classes' && (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Class Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Schedule</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Teacher</th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {classes.map((klass) => (
-                  <tr key={klass.id}>
-                    <td className="px-6 py-4 text-sm text-slate-700">{klass.name}</td>
-                    <td className="px-6 py-4 text-sm text-slate-700">{klass.schedule}</td>
-                    <td className="px-6 py-4 text-sm text-slate-700">{klass.teacher.user.name}</td>
-                    <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => openClassModal('edit', klass)}
-                        className="rounded-lg bg-slate-100 px-3 py-1 text-slate-700 hover:bg-slate-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete('class', klass.id)}
-                        className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === 'enrollments' && (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Student</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Class</th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {enrollments.map((enrollment) => (
-                  <tr key={enrollment.id}>
-                    <td className="px-6 py-4 text-sm text-slate-700">{enrollment.student.user.name}</td>
-                    <td className="px-6 py-4 text-sm text-slate-700">{enrollment.class.name}</td>
-                    <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => handleDelete('enrollment', enrollment.id)}
-                        className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === 'fingerprint' && (
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="grid gap-4 md:grid-cols-2">
-              {students.map((student) => (
-                <div key={student.id} className="rounded-2xl border border-slate-200 p-4">
-                  <p className="font-semibold text-slate-900">{student.name}</p>
-                  <p className="text-slate-600 text-sm">{student.email}</p>
-                  <p className="text-slate-600 text-sm">Student ID: {student.student?.student_id}</p>
-                  <p className="text-slate-600 text-sm">Fingerprint ID: {student.student?.fingerprint_id || 'Not registered'}</p>
-                  <button
-                    onClick={() => openFingerprintModal(student)}
-                    className="mt-3 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-                  >
-                    Register Fingerprint
-                  </button>
-                </div>
-              ))}
+          {/* Content */}
+          <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-slate-900">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
+              <p className="text-slate-600">
+                {activeTab === 'users' && 'Create and manage teacher and student accounts.'}
+                {activeTab === 'classes' && 'Create classes and assign teachers.'}
+                {activeTab === 'enrollments' && 'Assign students to classes.'}
+                {activeTab === 'fingerprint' && 'Register fingerprint IDs for students.'}
+              </p>
             </div>
+            <Button
+              onClick={() => {
+                if (activeTab === 'users') openUserModal('create')
+                if (activeTab === 'classes') openClassModal('create')
+                if (activeTab === 'enrollments') openEnrollmentModal()
+                if (activeTab === 'fingerprint') openFingerprintModal(students[0])
+              }}
+            >
+              Add {activeTab === 'users' ? 'User' : activeTab === 'classes' ? 'Class' : activeTab === 'enrollments' ? 'Enrollment' : 'Student'}
+            </Button>
           </div>
-        )}
-      </div>
+
+          {activeTab === 'users' && (
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Name</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Email</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Role</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Details</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {users.map((user) => (
+                    <tr key={user.id}>
+                      <td className="px-6 py-4 text-sm text-slate-700">{user.name}</td>
+                      <td className="px-6 py-4 text-sm text-slate-700">{user.email}</td>
+                      <td className="px-6 py-4 text-sm text-slate-700">{user.role}</td>
+                      <td className="px-6 py-4 text-sm text-slate-700">
+                        {user.role === 'STUDENT' ? (
+                          <div className="space-y-1 text-sm">
+                            <div>Student ID: {user.student?.student_id}</div>
+                            <div>Fingerprint: {user.student?.fingerprint_id || 'N/A'}</div>
+                            <div>Guardian: {user.student?.guardian_email}</div>
+                          </div>
+                        ) : user.role === 'TEACHER' ? (
+                          <div className="text-sm">Employee ID: {user.teacher?.employee_id}</div>
+                        ) : (
+                          'Admin'
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => openUserModal('edit', user)}
+                          className="rounded-lg bg-slate-100 px-3 py-1 text-slate-700 hover:bg-slate-200"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete('user', user.id)}
+                          className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                        >
+                          Delete
+                        </button>
+                        {user.role === 'STUDENT' && (
+                          <button
+                            onClick={() => openFingerprintModal(user)}
+                            className="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
+                          >
+                            Fingerprint
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'classes' && (
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Class Name</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Schedule</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Teacher</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {classes.map((klass) => (
+                    <tr key={klass.id}>
+                      <td className="px-6 py-4 text-sm text-slate-700">{klass.name}</td>
+                      <td className="px-6 py-4 text-sm text-slate-700">{klass.schedule}</td>
+                      <td className="px-6 py-4 text-sm text-slate-700">{klass.teacher.user.name}</td>
+                      <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => openClassModal('edit', klass)}
+                          className="rounded-lg bg-slate-100 px-3 py-1 text-slate-700 hover:bg-slate-200"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete('class', klass.id)}
+                          className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'enrollments' && (
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Student</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Class</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {enrollments.map((enrollment) => (
+                    <tr key={enrollment.id}>
+                      <td className="px-6 py-4 text-sm text-slate-700">{enrollment.student.user.name}</td>
+                      <td className="px-6 py-4 text-sm text-slate-700">{enrollment.class.name}</td>
+                      <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => handleDelete('enrollment', enrollment.id)}
+                          className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'fingerprint' && (
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="grid gap-4 md:grid-cols-2">
+                {students.map((student) => (
+                  <div key={student.id} className="rounded-2xl border border-slate-200 p-4">
+                    <p className="font-semibold text-slate-900">{student.name}</p>
+                    <p className="text-slate-600 text-sm">{student.email}</p>
+                    <p className="text-slate-600 text-sm">Student ID: {student.student?.student_id}</p>
+                    <p className="text-slate-600 text-sm">Fingerprint ID: {student.student?.fingerprint_id || 'Not registered'}</p>
+                    <button
+                      onClick={() => openFingerprintModal(student)}
+                      className="mt-3 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                    >
+                      Register Fingerprint
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -728,6 +780,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   )
 }

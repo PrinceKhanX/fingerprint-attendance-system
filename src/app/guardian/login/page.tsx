@@ -3,6 +3,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function GuardianLoginPage() {
   const router = useRouter()
@@ -39,62 +44,60 @@ export default function GuardianLoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-emerald-200 bg-white p-8 shadow-2xl">
-        <h1 className="text-3xl font-bold text-center text-slate-900 mb-2">Guardian Portal</h1>
-        <p className="text-center text-slate-500 text-sm mb-8">
-          View your child&apos;s attendance
-        </p>
+      <Card className="w-full max-w-md shadow-2xl">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-3xl font-bold">Guardian Portal</CardTitle>
+          <CardDescription>View your child's attendance</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-        {error && (
-          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 text-red-600 text-sm">
-            {error}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Guardian Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="guardian@example.com"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <p className="text-center text-sm text-slate-600">
+            <Link href="/login" className="text-emerald-600 hover:underline font-semibold">
+              Back to main login
+            </Link>
+          </p>
+
+          <div className="pt-4 border-t border-slate-200 w-full">
+            <p className="text-xs text-slate-500 text-center mb-2">Demo credentials:</p>
+            <p className="text-center text-xs text-slate-600"><strong>guardian@example.com</strong> / guardian123</p>
           </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Guardian Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder="guardian@example.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:bg-slate-400 transition"
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-slate-600 text-sm">
-          <Link href="/login" className="text-emerald-600 hover:underline font-semibold">
-            Back to main login
-          </Link>
-        </p>
-
-        <div className="mt-8 pt-6 border-t border-slate-200 text-xs text-slate-600">
-          <p className="text-center mb-2">Demo credentials:</p>
-          <p className="text-center"><strong>guardian@example.com</strong> / guardian123</p>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </main>
   )
 }

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { useSocket } from '@/hooks/useSocket'
 
 type AttendanceStatus = 'PRESENT' | 'LATE' | 'ABSENT'
 
@@ -43,6 +44,28 @@ export default function TeacherAttendancePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  // Socket connection for real-time updates
+  useSocket(selectedClassId, (event) => {
+    // Only update if the event is for the current class and today's date
+    if (event.classId === selectedClassId && event.timestamp.startsWith(selectedDate)) {
+      setStudents((prevStudents) => {
+        const studentIndex = prevStudents.findIndex((s) => s.id === event.studentId)
+        if (studentIndex !== -1) {
+          const updated = [...prevStudents]
+          updated[studentIndex] = {
+            ...updated[studentIndex],
+            status: event.status as AttendanceStatus,
+          }
+          setStatusMap((prev) => ({ ...prev, [event.studentId]: event.status as AttendanceStatus }))
+          return updated
+        }
+        return prevStudents
+      })
+      setSuccess(`${event.studentName} marked as ${event.status} via fingerprint`)
+      setTimeout(() => setSuccess(''), 3000)
+    }
+  })
 
   useEffect(() => {
     async function loadClasses() {

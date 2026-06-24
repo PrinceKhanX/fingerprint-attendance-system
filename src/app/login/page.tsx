@@ -4,6 +4,12 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 function LoginPageContent() {
   const searchParams = useSearchParams()
@@ -31,7 +37,7 @@ function LoginPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-        credentials: 'include', // Ensure cookies are sent
+        credentials: 'include',
       })
 
       const data = await response.json()
@@ -42,7 +48,6 @@ function LoginPageContent() {
         return
       }
 
-      // Redirect based on role
       const roleRoutes: Record<string, string> = {
         ADMIN: '/admin/dashboard',
         TEACHER: '/teacher/dashboard',
@@ -52,7 +57,6 @@ function LoginPageContent() {
       const redirectUrl = roleRoutes[data.user.role] || '/login'
       console.log(`Login successful, redirecting to ${redirectUrl}`)
       
-      // Use window.location for a full page reload to ensure cookie is recognized
       window.location.href = redirectUrl
     } catch (err) {
       console.error('Login error:', err)
@@ -63,85 +67,87 @@ function LoginPageContent() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-blue-200 bg-white p-8 shadow-2xl">
-        <h1 className="text-3xl font-bold text-center text-slate-900 mb-8">Fingerprint Attendance</h1>
+      <Card className="w-full max-w-md shadow-2xl">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-3xl font-bold">Fingerprint Attendance</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-        {error && (
-          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 text-red-600 text-sm">
-            {error}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@example.com"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <Select value={role} onValueChange={setRole}>
+                <SelectTrigger id="role">
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="STUDENT">Student</SelectItem>
+                  <SelectItem value="TEACHER">Teacher</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? 'Logging in...' : 'Login'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <p className="text-center text-sm text-slate-600">
+            <Link href="/guardian/login" className="text-emerald-600 hover:underline font-semibold">
+              Guardian portal login
+            </Link>
+          </p>
+
+          <p className="text-center text-sm text-slate-600">
+            Don't have an account?{' '}
+            <Link href="/register" className="text-blue-600 hover:underline font-semibold">
+              Register
+            </Link>
+          </p>
+
+          <div className="pt-4 border-t border-slate-200 w-full">
+            <p className="text-xs text-slate-500 text-center mb-3">Demo Credentials:</p>
+            <div className="space-y-1 text-xs text-slate-600">
+              <p><strong>Admin:</strong> admin@example.com / admin123</p>
+              <p><strong>Teacher:</strong> teacher@example.com / teacher123</p>
+              <p><strong>Student:</strong> student@example.com / student123</p>
+              <p><strong>Guardian:</strong> guardian@example.com / guardian123</p>
+            </div>
           </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="admin@example.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Role</label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="STUDENT">Student</option>
-              <option value="TEACHER">Teacher</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 disabled:bg-slate-400 transition"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-slate-600 text-sm">
-          <Link href="/guardian/login" className="text-emerald-600 hover:underline font-semibold">
-            Guardian portal login
-          </Link>
-        </p>
-
-        <p className="mt-3 text-center text-slate-600 text-sm">
-          Don't have an account?{' '}
-          <Link href="/register" className="text-blue-600 hover:underline font-semibold">
-            Register
-          </Link>
-        </p>
-
-        <div className="mt-8 pt-6 border-t border-slate-200">
-          <p className="text-xs text-slate-500 text-center mb-4">Demo Credentials:</p>
-          <div className="space-y-2 text-xs text-slate-600">
-            <p><strong>Admin:</strong> admin@example.com / admin123</p>
-            <p><strong>Teacher:</strong> teacher@example.com / teacher123</p>
-            <p><strong>Student:</strong> student@example.com / student123</p>
-            <p><strong>Guardian:</strong> guardian@example.com / guardian123</p>
-          </div>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </main>
   )
 }
