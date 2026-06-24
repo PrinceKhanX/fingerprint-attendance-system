@@ -28,36 +28,51 @@ function LoginPageContent() {
 
   const roleColors = {
     ADMIN: {
-      primary: 'from-blue-500 to-indigo-600',
+      primary: '#2563EB',
+      primaryGradient: 'from-blue-600 to-blue-700',
       border: 'border-blue-200',
       hoverBorder: 'hover:border-blue-400',
       focus: 'focus:ring-blue-500',
       text: 'text-blue-600',
+      bg: 'bg-blue-50',
     },
     TEACHER: {
-      primary: 'from-teal-500 to-emerald-600',
+      primary: '#0D9488',
+      primaryGradient: 'from-teal-600 to-teal-700',
       border: 'border-teal-200',
       hoverBorder: 'hover:border-teal-400',
       focus: 'focus:ring-teal-500',
       text: 'text-teal-600',
+      bg: 'bg-teal-50',
     },
     STUDENT: {
-      primary: 'from-amber-500 to-orange-600',
+      primary: '#F59E0B',
+      primaryGradient: 'from-amber-500 to-amber-600',
       border: 'border-amber-200',
       hoverBorder: 'hover:border-amber-400',
       focus: 'focus:ring-amber-500',
       text: 'text-amber-600',
+      bg: 'bg-amber-50',
     },
     GUARDIAN: {
-      primary: 'from-purple-500 to-violet-600',
+      primary: '#7C3AED',
+      primaryGradient: 'from-purple-600 to-purple-700',
       border: 'border-purple-200',
       hoverBorder: 'hover:border-purple-400',
       focus: 'focus:ring-purple-500',
       text: 'text-purple-600',
+      bg: 'bg-purple-50',
     },
   }
 
   const currentColor = roleColors[role as keyof typeof roleColors] || roleColors.STUDENT
+
+  const roleTitles = {
+    ADMIN: 'Admin Login',
+    TEACHER: 'Teacher Login',
+    STUDENT: 'Student Login',
+    GUARDIAN: 'Guardian Login',
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -128,33 +143,54 @@ function LoginPageContent() {
         </Button>
       </div>
 
-      <div className={`w-full max-w-md relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        <Card className={`border-2 ${currentColor.border} ${currentColor.hoverBorder} bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-300/50`}>
-          <CardHeader className="space-y-4 text-center pb-6">
-            {/* Fingerprint icon */}
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg mx-auto animate-float">
-              <Fingerprint className="w-8 h-8 text-white" />
+      {/* Back to home link */}
+      <Link href="/" className="absolute top-4 left-4 z-20 text-sm text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to home
+      </Link>
+
+      <div className={`w-full max-w-[480px] relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className="bg-white/90 backdrop-blur-xl shadow-2xl shadow-slate-300/50 rounded-3xl overflow-hidden">
+          {/* Top accent bar */}
+          <div className={`h-1.5 bg-gradient-to-r ${currentColor.primaryGradient} transition-all duration-500`} />
+
+          <div className="p-10 space-y-8">
+            {/* Brand logo */}
+            <div className="text-center">
+              <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors">
+                <Fingerprint className="w-4 h-4" />
+                <span>Fingerprint Attendance</span>
+              </Link>
             </div>
-            <div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                Fingerprint Attendance
-              </CardTitle>
-              <CardDescription className="text-base mt-2">Sign in to your account</CardDescription>
+
+            {/* Header */}
+            <div className="text-center space-y-2">
+              {/* Small fingerprint icon */}
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 mb-4">
+                <Fingerprint className="w-6 h-6 text-slate-600" />
+              </div>
+              <h1 className="text-3xl font-bold text-slate-900 transition-all duration-300">
+                {roleTitles[role as keyof typeof roleTitles] || 'Login'}
+              </h1>
+              <p className="text-slate-600">Sign in to your account</p>
             </div>
-          </CardHeader>
-          <CardContent>
+
+            {/* Error alert */}
             {error && (
-              <Alert variant="destructive" className="mb-4 border-2 border-red-200">
+              <Alert variant="destructive" className="border-2 border-red-200">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
+            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email field with icon */}
+              {/* Email field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <Input
                     id="email"
                     type="email"
@@ -162,16 +198,16 @@ function LoginPageContent() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="admin@example.com"
                     required
-                    className={`pl-10 border-2 ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-200`}
+                    className={`pl-12 h-12 border-2 ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-200 text-base`}
                   />
                 </div>
               </div>
 
-              {/* Password field with icon */}
+              {/* Password field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+                <Label htmlFor="password" className="text-sm font-medium text-slate-700">Password</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <Input
                     id="password"
                     type="password"
@@ -179,16 +215,16 @@ function LoginPageContent() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className={`pl-10 border-2 ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-200`}
+                    className={`pl-12 h-12 border-2 ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-200 text-base`}
                   />
                 </div>
               </div>
 
               {/* Role dropdown */}
               <div className="space-y-2">
-                <Label htmlFor="role" className="text-sm font-medium">Role</Label>
+                <Label htmlFor="role" className="text-sm font-medium text-slate-700">Role</Label>
                 <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger id="role" className={`border-2 ${currentColor.border} ${currentColor.hoverBorder} focus:ring-2 ${currentColor.focus} transition-all duration-200`}>
+                  <SelectTrigger id="role" className={`h-12 border-2 ${currentColor.border} ${currentColor.hoverBorder} focus:ring-2 ${currentColor.focus} transition-all duration-200 text-base`}>
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -200,56 +236,58 @@ function LoginPageContent() {
                 </Select>
               </div>
 
-              {/* Login button with gradient */}
+              {/* Login button */}
               <Button
                 type="submit"
                 disabled={loading}
-                className={`w-full bg-gradient-to-r ${currentColor.primary} hover:opacity-90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`w-full h-12 bg-gradient-to-r ${currentColor.primaryGradient} hover:opacity-90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-base ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                style={{ backgroundColor: currentColor.primary }}
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                     Logging in...
                   </span>
                 ) : (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center justify-center gap-2">
                     Login
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-5 w-5" />
                   </span>
                 )}
               </Button>
             </form>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4 pt-6">
-            <p className="text-center text-sm text-slate-600">
-              <Link href="/guardian/login" className="text-teal-600 hover:text-teal-700 font-semibold hover:underline transition-colors flex items-center gap-1 justify-center">
-                Guardian portal login
-                <ChevronRight className="h-3 w-3" />
-              </Link>
-            </p>
 
-            <p className="text-center text-sm text-slate-600">
-              Don't have an account?{' '}
-              <Link href="/register" className="text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors">
-                Register
-              </Link>
-            </p>
+            {/* Links */}
+            <div className="space-y-3 pt-4 border-t border-slate-200">
+              <p className="text-center text-sm text-slate-600">
+                <Link href="/guardian/login" className="text-teal-600 hover:text-teal-700 font-semibold hover:underline transition-colors">
+                  Guardian portal login
+                </Link>
+              </p>
 
-            {/* Demo credentials section */}
-            <div className="pt-4 border-t border-slate-200 w-full">
+              <p className="text-center text-sm text-slate-600">
+                Don't have an account?{' '}
+                <Link href="/register" className="text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors">
+                  Register
+                </Link>
+              </p>
+            </div>
+
+            {/* Demo credentials */}
+            <div className="pt-4 border-t border-slate-200">
               <button
                 type="button"
                 onClick={() => setShowDemo(!showDemo)}
-                className="w-full flex items-center justify-center gap-2 text-xs text-slate-500 hover:text-slate-700 transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-xs text-slate-500 hover:text-slate-700 transition-colors py-2"
               >
                 <span>Demo Credentials</span>
                 <ChevronRight className={`h-3 w-3 transition-transform ${showDemo ? 'rotate-90' : ''}`} />
               </button>
               {showDemo && (
-                <div className="mt-3 space-y-2 text-xs text-slate-600 bg-slate-50 rounded-lg p-3 border border-slate-200">
+                <div className="mt-3 space-y-2 text-xs text-slate-600 bg-slate-50 rounded-xl p-4 border border-slate-200">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-blue-600">Admin:</span>
                     <span>admin@example.com / admin123</span>
@@ -269,23 +307,9 @@ function LoginPageContent() {
                 </div>
               )}
             </div>
-          </CardFooter>
-        </Card>
+          </div>
+        </div>
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-      `}</style>
     </main>
   )
 }
