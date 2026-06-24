@@ -191,35 +191,29 @@ function LoginPageContent() {
               {/* Email field */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Email</Label>
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@example.com"
-                    required
-                    className={`pl-12 h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
-                  />
-                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@example.com"
+                  required
+                  className={`h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
+                />
               </div>
 
               {/* Password field */}
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Password</Label>
-                <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className={`pl-12 h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
-                  />
-                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className={`h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
+                />
               </div>
 
               {/* Role dropdown */}
