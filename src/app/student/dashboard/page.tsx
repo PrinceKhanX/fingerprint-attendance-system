@@ -130,16 +130,16 @@ export default function StudentDashboard() {
   const [year, monthNum] = month.split('-').map(Number)
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-background flex">
       <DashboardSidebar role="STUDENT" userName={data?.student.name} onLogout={handleLogout} />
       
-      <main className="flex-1 lg:ml-64 p-4 lg:p-8">
+      <main className="flex-1 lg:ml-64 p-6 lg:p-8 bg-muted/30">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Student Dashboard</h1>
+          <div className="bg-card rounded-xl p-6 shadow-sm border">
+            <h1 className="text-2xl font-bold text-foreground">Student Dashboard</h1>
             {data && (
-              <p className="text-slate-600">
+              <p className="text-muted-foreground">
                 {data.student.name} · {data.student.student_id}
               </p>
             )}
@@ -153,26 +153,26 @@ export default function StudentDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">Enrolled Classes</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Enrolled Classes</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-slate-900">{data.stats.enrolledClasses}</div>
+                    <div className="text-2xl font-bold text-foreground">{data.stats.enrolledClasses}</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">Attendance Rate</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Attendance Rate</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-slate-900">{data.stats.attendancePercentage}%</div>
+                    <div className="text-2xl font-bold text-foreground">{data.stats.attendancePercentage}%</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">Days Absent</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Days Absent</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-slate-900">{data.stats.absent}</div>
+                    <div className="text-2xl font-bold text-foreground">{data.stats.absent}</div>
                   </CardContent>
                 </Card>
               </div>

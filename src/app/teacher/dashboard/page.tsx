@@ -117,15 +117,15 @@ export default function TeacherDashboard() {
   const selectedClass = dashboard?.classes.find((c) => c.id === selectedClassId)
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-background flex">
       <DashboardSidebar role="TEACHER" userName={userName} onLogout={handleLogout} />
       
-      <main className="flex-1 lg:ml-64 p-4 lg:p-8">
+      <main className="flex-1 lg:ml-64 p-6 lg:p-8 bg-muted/30">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Teacher Dashboard</h1>
-            <p className="text-slate-600">
+          <div className="bg-card rounded-xl p-6 shadow-sm border">
+            <h1 className="text-2xl font-bold text-foreground">Teacher Dashboard</h1>
+            <p className="text-muted-foreground">
               {dashboard?.date ?? todayString()} · Live attendance
             </p>
           </div>
@@ -138,28 +138,28 @@ export default function TeacherDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">Today's Classes</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Today's Classes</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-slate-900">{dashboard?.summary.classCount ?? 0}</div>
+                    <div className="text-2xl font-bold text-foreground">{dashboard?.summary.classCount ?? 0}</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">Students Present</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Students Present</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-slate-900">
+                    <div className="text-2xl font-bold text-foreground">
                       {dashboard?.summary.totalPresent ?? 0} / {dashboard?.summary.totalStudents ?? 0}
                     </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">Attendance Rate</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Attendance Rate</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-slate-900">{dashboard?.summary.attendanceRate ?? 0}%</div>
+                    <div className="text-2xl font-bold text-foreground">{dashboard?.summary.attendanceRate ?? 0}%</div>
                   </CardContent>
                 </Card>
               </div>

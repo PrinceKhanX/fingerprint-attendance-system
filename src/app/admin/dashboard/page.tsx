@@ -308,49 +308,49 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-background flex">
       <DashboardSidebar role="ADMIN" userName={userName} onLogout={handleLogout} />
       
-      <main className="flex-1 lg:ml-64 p-4 lg:p-8">
+      <main className="flex-1 lg:ml-64 p-6 lg:p-8 bg-muted/30">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
-            <p className="text-slate-600">Manage users, classes, enrollments, and fingerprint registrations.</p>
+          <div className="bg-card rounded-xl p-6 shadow-sm border">
+            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+            <p className="text-muted-foreground">Manage users, classes, enrollments, and fingerprint registrations.</p>
           </div>
 
           {/* Stat Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Users</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">{users.length}</div>
+                <div className="text-2xl font-bold text-foreground">{users.length}</div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Classes</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Classes</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">{classes.length}</div>
+                <div className="text-2xl font-bold text-foreground">{classes.length}</div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Students</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Students</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">{students.length}</div>
+                <div className="text-2xl font-bold text-foreground">{students.length}</div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Enrollments</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Enrollments</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">{enrollments.length}</div>
+                <div className="text-2xl font-bold text-foreground">{enrollments.length}</div>
               </CardContent>
             </Card>
           </div>

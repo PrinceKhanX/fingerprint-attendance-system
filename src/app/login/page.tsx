@@ -69,7 +69,7 @@ function LoginPageContent() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
       <div className="absolute top-4 right-4">
         <Button
           variant="outline"
@@ -79,7 +79,7 @@ function LoginPageContent() {
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
       </div>
-      <Card className="w-full max-w-md shadow-2xl">
+      <Card className="w-full max-w-md shadow-xl border-2">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold">Fingerprint Attendance</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>

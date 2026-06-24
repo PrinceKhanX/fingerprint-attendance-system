@@ -111,13 +111,13 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 lg:p-8 space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Attendance Analytics</h1>
-            <p className="text-slate-600">View attendance trends and insights</p>
+            <h1 className="text-2xl font-bold text-foreground">Attendance Analytics</h1>
+            <p className="text-muted-foreground">View attendance trends and insights</p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -136,7 +136,7 @@ export default function AnalyticsPage() {
         {/* Daily Attendance Rate Line Chart */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-foreground">
               Daily Attendance Rate (Last 30 Days)
             </CardTitle>
           </CardHeader>
@@ -173,7 +173,7 @@ export default function AnalyticsPage() {
         {/* Class Attendance Comparison Bar Chart */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-foreground">
               Attendance Rate by Class
             </CardTitle>
           </CardHeader>
@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
         {/* Low Attendance Students Table */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-foreground">
               Students with Low Attendance (&lt;75%)
             </CardTitle>
           </CardHeader>

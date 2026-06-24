@@ -70,16 +70,16 @@ export default function GuardianDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-background flex">
       <DashboardSidebar role="GUARDIAN" userName={data?.guardian.name} onLogout={handleLogout} />
       
-      <main className="flex-1 lg:ml-64 p-4 lg:p-8">
+      <main className="flex-1 lg:ml-64 p-6 lg:p-8 bg-muted/30">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Guardian Portal</h1>
+          <div className="bg-card rounded-xl p-6 shadow-sm border">
+            <h1 className="text-2xl font-bold text-foreground">Guardian Portal</h1>
             {data && (
-              <p className="text-slate-600">
+              <p className="text-muted-foreground">
                 Welcome, {data.guardian.name} ({data.guardian.email})
               </p>
             )}
@@ -107,34 +107,34 @@ export default function GuardianDashboardPage() {
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-600">Attendance Rate</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Attendance Rate</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{child.stats.attendancePercentage}%</div>
+                        <div className="text-2xl font-bold text-foreground">{child.stats.attendancePercentage}%</div>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-600">Present</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Present</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{child.stats.present}</div>
+                        <div className="text-2xl font-bold text-foreground">{child.stats.present}</div>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-600">Late</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Late</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{child.stats.late}</div>
+                        <div className="text-2xl font-bold text-foreground">{child.stats.late}</div>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-600">Absent</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Absent</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{child.stats.absent}</div>
+                        <div className="text-2xl font-bold text-foreground">{child.stats.absent}</div>
                       </CardContent>
                     </Card>
                   </div>

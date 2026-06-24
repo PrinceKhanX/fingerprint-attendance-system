@@ -78,16 +78,16 @@ export function DashboardSidebar({ role, userName, onLogout }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed left-0 top-0 h-full bg-white border-r border-slate-200 z-40 transition-all duration-300
+          fixed left-0 top-0 h-full bg-card border-r border-border z-40 transition-all duration-300 shadow-lg
           ${collapsed ? 'w-16' : 'w-64'}
           ${collapsed ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'}
         `}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b border-slate-200">
+          <div className="p-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold">
                 {role === 'ADMIN' && <Shield className="h-5 w-5" />}
                 {role === 'TEACHER' && <BookOpen className="h-5 w-5" />}
                 {role === 'STUDENT' && <User className="h-5 w-5" />}
@@ -95,8 +95,8 @@ export function DashboardSidebar({ role, userName, onLogout }: SidebarProps) {
               </div>
               {!collapsed && (
                 <div>
-                  <h2 className="font-semibold text-slate-900">{role}</h2>
-                  {userName && <p className="text-xs text-slate-500">{userName}</p>}
+                  <h2 className="font-semibold text-foreground">{role}</h2>
+                  {userName && <p className="text-xs text-muted-foreground">{userName}</p>}
                 </div>
               )}
             </div>
@@ -125,7 +125,7 @@ export function DashboardSidebar({ role, userName, onLogout }: SidebarProps) {
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t border-slate-200 space-y-2">
+          <div className="p-4 border-t border-border space-y-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

@@ -46,7 +46,7 @@ export default function GuardianLoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100 p-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 p-4">
       <div className="absolute top-4 right-4">
         <Button
           variant="outline"
@@ -56,7 +56,7 @@ export default function GuardianLoginPage() {
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
       </div>
-      <Card className="w-full max-w-md shadow-2xl">
+      <Card className="w-full max-w-md shadow-xl border-2">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold">Guardian Portal</CardTitle>
           <CardDescription>View your child's attendance</CardDescription>
