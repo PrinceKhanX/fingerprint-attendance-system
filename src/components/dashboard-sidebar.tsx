@@ -4,12 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { useTheme } from '@/components/theme-provider'
 import {
   LayoutDashboard,
@@ -126,30 +120,17 @@ export function DashboardSidebar({ role, userName, onLogout }: SidebarProps) {
 
           {/* Logout */}
           <div className="p-4 border-t border-border space-y-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={`
-                    w-full justify-start gap-3
-                    ${collapsed ? 'px-3' : 'px-4'}
-                  `}
-                >
-                  {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                  {!collapsed && <span>{theme === 'dark' ? 'Dark' : 'Light'}</span>}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme('light')}>
-                  <Sun className="mr-2 h-4 w-4" />
-                  Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('dark')}>
-                  <Moon className="mr-2 h-4 w-4" />
-                  Dark
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+              variant="ghost"
+              className={`
+                w-full justify-start gap-3
+                ${collapsed ? 'px-3' : 'px-4'}
+              `}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {!collapsed && <span>{theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}</span>}
+            </Button>
             <Button
               variant="ghost"
               className={`

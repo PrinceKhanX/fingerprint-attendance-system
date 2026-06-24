@@ -86,9 +86,9 @@ export default function GuardianDashboardPage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-slate-500">Loading...</div>
+            <div className="text-center py-12 text-muted-foreground">Loading...</div>
           ) : !data || data.children.length === 0 ? (
-            <Card className="p-8 text-center text-slate-500">
+            <Card className="p-8 text-center text-muted-foreground">
               No students linked to your guardian email yet.
             </Card>
           ) : (
@@ -99,8 +99,8 @@ export default function GuardianDashboardPage() {
                 <div key={child.id} className="space-y-4">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-xl font-semibold text-slate-900">{child.name}</CardTitle>
-                      <p className="text-sm text-slate-500">{child.student_id}</p>
+                      <CardTitle className="text-xl font-semibold text-foreground">{child.name}</CardTitle>
+                      <p className="text-sm text-muted-foreground">{child.student_id}</p>
                     </CardHeader>
                   </Card>
 
@@ -142,21 +142,21 @@ export default function GuardianDashboardPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg font-semibold text-slate-900">Class Timetable</CardTitle>
+                        <CardTitle className="text-lg font-semibold text-foreground">Class Timetable</CardTitle>
                       </CardHeader>
                       <CardContent>
                         {child.classes.length === 0 ? (
-                          <p className="text-sm text-slate-500">No enrolled classes</p>
+                          <p className="text-sm text-muted-foreground">No enrolled classes</p>
                         ) : (
                           <ul className="space-y-3">
                             {child.classes.map((c) => (
                               <li
                                 key={c.id}
-                                className="rounded-lg border border-slate-100 px-4 py-3"
+                                className="rounded-lg border border-border px-4 py-3"
                               >
-                                <p className="font-medium text-slate-900">{c.name}</p>
-                                <p className="text-sm text-slate-500">{c.schedule}</p>
-                                <p className="text-xs text-slate-400 mt-1">Teacher: {c.teacherName}</p>
+                                <p className="font-medium text-foreground">{c.name}</p>
+                                <p className="text-sm text-muted-foreground">{c.schedule}</p>
+                                <p className="text-xs text-muted-foreground mt-1">Teacher: {c.teacherName}</p>
                               </li>
                             ))}
                           </ul>
@@ -166,11 +166,11 @@ export default function GuardianDashboardPage() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg font-semibold text-slate-900">Recent Alerts</CardTitle>
+                        <CardTitle className="text-lg font-semibold text-foreground">Recent Alerts</CardTitle>
                       </CardHeader>
                       <CardContent>
                         {child.recentAlerts.length === 0 ? (
-                          <p className="text-sm text-slate-500">No late or absent records</p>
+                          <p className="text-sm text-muted-foreground">No late or absent records</p>
                         ) : (
                           <ul className="space-y-2">
                             {child.recentAlerts.map((alert) => (
@@ -183,8 +183,8 @@ export default function GuardianDashboardPage() {
                                 }`}
                               >
                                 <div>
-                                  <p className="font-medium text-slate-900">{alert.className}</p>
-                                  <p className="text-xs text-slate-500">{alert.date}</p>
+                                  <p className="font-medium text-foreground">{alert.className}</p>
+                                  <p className="text-xs text-muted-foreground">{alert.date}</p>
                                 </div>
                                 <span
                                   className={`text-xs font-semibold px-2 py-1 rounded ${
@@ -207,7 +207,7 @@ export default function GuardianDashboardPage() {
             </>
           )}
 
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-muted-foreground">
             Email and SMS alerts are sent automatically when a teacher marks your child late or absent.
           </p>
         </div>

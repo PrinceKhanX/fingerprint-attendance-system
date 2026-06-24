@@ -374,8 +374,8 @@ export default function AdminDashboard() {
           {/* Content */}
           <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
-              <p className="text-slate-600">
+              <h2 className="text-xl font-semibold text-foreground">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
+              <p className="text-muted-foreground">
                 {activeTab === 'users' && 'Create and manage teacher and student accounts.'}
                 {activeTab === 'classes' && 'Create classes and assign teachers.'}
                 {activeTab === 'enrollments' && 'Assign students to classes.'}
@@ -395,24 +395,24 @@ export default function AdminDashboard() {
           </div>
 
           {activeTab === 'users' && (
-            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-              <table className="min-w-full divide-y divide-slate-200">
-                <thead className="bg-slate-50">
+            <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+              <table className="min-w-full divide-y divide-border">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Role</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Details</th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Name</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Email</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Role</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Details</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-border">
                   {users.map((user) => (
                     <tr key={user.id}>
-                      <td className="px-6 py-4 text-sm text-slate-700">{user.name}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">{user.email}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">{user.role}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">
+                      <td className="px-6 py-4 text-sm text-foreground">{user.name}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{user.email}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{user.role}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">
                         {user.role === 'STUDENT' ? (
                           <div className="space-y-1 text-sm">
                             <div>Student ID: {user.student?.student_id}</div>
@@ -428,20 +428,20 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                         <button
                           onClick={() => openUserModal('edit', user)}
-                          className="rounded-lg bg-slate-100 px-3 py-1 text-slate-700 hover:bg-slate-200"
+                          className="rounded-lg bg-muted px-3 py-1 text-foreground hover:bg-muted/80"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete('user', user.id)}
-                          className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                          className="rounded-lg bg-destructive/10 px-3 py-1 text-destructive hover:bg-destructive/20"
                         >
                           Delete
                         </button>
                         {user.role === 'STUDENT' && (
                           <button
                             onClick={() => openFingerprintModal(user)}
-                            className="rounded-lg bg-blue-100 px-3 py-1 text-blue-700 hover:bg-blue-200"
+                            className="rounded-lg bg-primary/10 px-3 py-1 text-primary hover:bg-primary/20"
                           >
                             Fingerprint
                           </button>
@@ -455,32 +455,32 @@ export default function AdminDashboard() {
           )}
 
           {activeTab === 'classes' && (
-            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-              <table className="min-w-full divide-y divide-slate-200">
-                <thead className="bg-slate-50">
+            <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+              <table className="min-w-full divide-y divide-border">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Class Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Schedule</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Teacher</th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Class Name</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Schedule</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Teacher</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-border">
                   {classes.map((klass) => (
                     <tr key={klass.id}>
-                      <td className="px-6 py-4 text-sm text-slate-700">{klass.name}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">{klass.schedule}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">{klass.teacher.user.name}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{klass.name}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{klass.schedule}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{klass.teacher.user.name}</td>
                       <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                         <button
                           onClick={() => openClassModal('edit', klass)}
-                          className="rounded-lg bg-slate-100 px-3 py-1 text-slate-700 hover:bg-slate-200"
+                          className="rounded-lg bg-muted px-3 py-1 text-foreground hover:bg-muted/80"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete('class', klass.id)}
-                          className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                          className="rounded-lg bg-destructive/10 px-3 py-1 text-destructive hover:bg-destructive/20"
                         >
                           Delete
                         </button>
@@ -493,24 +493,24 @@ export default function AdminDashboard() {
           )}
 
           {activeTab === 'enrollments' && (
-            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-              <table className="min-w-full divide-y divide-slate-200">
-                <thead className="bg-slate-50">
+            <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+              <table className="min-w-full divide-y divide-border">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Student</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">Class</th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">Actions</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Student</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Class</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-border">
                   {enrollments.map((enrollment) => (
                     <tr key={enrollment.id}>
-                      <td className="px-6 py-4 text-sm text-slate-700">{enrollment.student.user.name}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">{enrollment.class.name}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{enrollment.student.user.name}</td>
+                      <td className="px-6 py-4 text-sm text-foreground">{enrollment.class.name}</td>
                       <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                         <button
                           onClick={() => handleDelete('enrollment', enrollment.id)}
-                          className="rounded-lg bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                          className="rounded-lg bg-destructive/10 px-3 py-1 text-destructive hover:bg-destructive/20"
                         >
                           Delete
                         </button>
@@ -523,14 +523,14 @@ export default function AdminDashboard() {
           )}
 
           {activeTab === 'fingerprint' && (
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
               <div className="grid gap-4 md:grid-cols-2">
                 {students.map((student) => (
-                  <div key={student.id} className="rounded-2xl border border-slate-200 p-4">
-                    <p className="font-semibold text-slate-900">{student.name}</p>
-                    <p className="text-slate-600 text-sm">{student.email}</p>
-                    <p className="text-slate-600 text-sm">Student ID: {student.student?.student_id}</p>
-                    <p className="text-slate-600 text-sm">Fingerprint ID: {student.student?.fingerprint_id || 'Not registered'}</p>
+                  <div key={student.id} className="rounded-2xl border border-border p-4">
+                    <p className="font-semibold text-foreground">{student.name}</p>
+                    <p className="text-muted-foreground text-sm">{student.email}</p>
+                    <p className="text-muted-foreground text-sm">Student ID: {student.student?.student_id}</p>
+                    <p className="text-muted-foreground text-sm">Fingerprint ID: {student.student?.fingerprint_id || 'Not registered'}</p>
                     <button
                       onClick={() => openFingerprintModal(student)}
                       className="mt-3 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
@@ -547,10 +547,10 @@ export default function AdminDashboard() {
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl">
+          <div className="w-full max-w-2xl rounded-3xl bg-card p-6 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-foreground">
                   {activeTab === 'users'
                     ? modalMode === 'create'
                       ? 'Create User'
@@ -563,9 +563,9 @@ export default function AdminDashboard() {
                     ? 'Create Enrollment'
                     : 'Register Fingerprint'}
                 </h3>
-                <p className="text-slate-600 mt-1">Use the form below to submit details.</p>
+                <p className="text-muted-foreground mt-1">Use the form below to submit details.</p>
               </div>
-              <button onClick={() => setModalOpen(false)} className="rounded-full bg-slate-100 p-2 text-slate-700 hover:bg-slate-200">
+              <button onClick={() => setModalOpen(false)} className="rounded-full bg-muted p-2 text-foreground hover:bg-muted/80">
                 ×
               </button>
             </div>
@@ -575,30 +575,30 @@ export default function AdminDashboard() {
                 <>
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Name</span>
+                      <span className="text-sm font-medium text-foreground">Name</span>
                       <input
                         value={formState.name}
                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                        className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Email</span>
+                      <span className="text-sm font-medium text-foreground">Email</span>
                       <input
                         value={formState.email}
                         onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                        className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                       />
                     </label>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Role</span>
+                      <span className="text-sm font-medium text-foreground">Role</span>
                       <select
                         value={formState.role}
                         onChange={(e) => setFormState({ ...formState, role: e.target.value })}
-                        className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                       >
                         {roleOptions.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -609,12 +609,12 @@ export default function AdminDashboard() {
                     </label>
                     {modalMode === 'create' && (
                       <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Password</span>
+                        <span className="text-sm font-medium text-foreground">Password</span>
                         <input
                           type="password"
                           value={formState.password}
                           onChange={(e) => setFormState({ ...formState, password: e.target.value })}
-                          className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                       </label>
                     )}
@@ -623,27 +623,27 @@ export default function AdminDashboard() {
                   {formState.role === 'STUDENT' && (
                     <div className="grid gap-4 md:grid-cols-3">
                       <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Student ID</span>
+                        <span className="text-sm font-medium text-foreground">Student ID</span>
                         <input
                           value={formState.student_id}
                           onChange={(e) => setFormState({ ...formState, student_id: e.target.value })}
-                          className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                       </label>
                       <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Fingerprint ID</span>
+                        <span className="text-sm font-medium text-foreground">Fingerprint ID</span>
                         <input
                           value={formState.fingerprint_id}
                           onChange={(e) => setFormState({ ...formState, fingerprint_id: e.target.value })}
-                          className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                       </label>
                       <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Guardian Email</span>
+                        <span className="text-sm font-medium text-foreground">Guardian Email</span>
                         <input
                           value={formState.guardian_email}
                           onChange={(e) => setFormState({ ...formState, guardian_email: e.target.value })}
-                          className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                       </label>
                     </div>
@@ -652,11 +652,11 @@ export default function AdminDashboard() {
                   {formState.role === 'TEACHER' && (
                     <div className="grid gap-4 md:grid-cols-1">
                       <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Employee ID</span>
+                        <span className="text-sm font-medium text-foreground">Employee ID</span>
                         <input
                           value={formState.employee_id}
                           onChange={(e) => setFormState({ ...formState, employee_id: e.target.value })}
-                          className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-2 w-full rounded-xl border border-input px-4 py-3 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                       </label>
                     </div>
@@ -667,7 +667,7 @@ export default function AdminDashboard() {
               {activeTab === 'classes' && (
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="block">
-                    <span className="text-sm font-medium text-slate-700">Class Name</span>
+                    <span className="text-sm font-medium text-foreground">Class Name</span>
                     <input
                       value={formState.name}
                       onChange={(e) => setFormState({ ...formState, name: e.target.value })}
@@ -675,7 +675,7 @@ export default function AdminDashboard() {
                     />
                   </label>
                   <label className="block">
-                    <span className="text-sm font-medium text-slate-700">Schedule</span>
+                    <span className="text-sm font-medium text-foreground">Schedule</span>
                     <input
                       value={formState.schedule}
                       onChange={(e) => setFormState({ ...formState, schedule: e.target.value })}
@@ -683,7 +683,7 @@ export default function AdminDashboard() {
                     />
                   </label>
                   <label className="block md:col-span-2">
-                    <span className="text-sm font-medium text-slate-700">Teacher</span>
+                    <span className="text-sm font-medium text-foreground">Teacher</span>
                     <select
                       value={formState.teacherId}
                       onChange={(e) => setFormState({ ...formState, teacherId: e.target.value })}
@@ -718,7 +718,7 @@ export default function AdminDashboard() {
                     </select>
                   </label>
                   <label className="block">
-                    <span className="text-sm font-medium text-slate-700">Class</span>
+                    <span className="text-sm font-medium text-foreground">Class</span>
                     <select
                       value={formState.classId}
                       onChange={(e) => setFormState({ ...formState, classId: e.target.value })}
@@ -742,7 +742,7 @@ export default function AdminDashboard() {
                     <input
                       value={selectedStudent.name}
                       disabled
-                      className="mt-2 w-full rounded-xl border border-slate-300 bg-slate-100 px-4 py-3"
+                      className="mt-2 w-full rounded-xl border border-input bg-muted px-4 py-3"
                     />
                   </label>
                   <label className="block">
@@ -760,7 +760,7 @@ export default function AdminDashboard() {
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => setModalOpen(false)}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-slate-700 hover:bg-slate-100"
+                className="rounded-lg border border-border px-4 py-2 text-foreground hover:bg-muted"
               >
                 Cancel
               </button>

@@ -131,7 +131,7 @@ export default function TeacherDashboard() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-slate-500">Loading dashboard...</div>
+            <div className="text-center py-12 text-muted-foreground">Loading dashboard...</div>
           ) : (
             <>
               {/* Stat Cards */}
@@ -173,14 +173,14 @@ export default function TeacherDashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg font-semibold text-slate-900">
+                    <CardTitle className="text-lg font-semibold text-foreground">
                       {dashboard?.showingAllClasses ? 'Your Classes' : "Today's Classes"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
-                    <ul className="divide-y divide-slate-100">
+                    <ul className="divide-y divide-border">
                       {dashboard?.classes.length === 0 ? (
-                        <li className="px-6 py-8 text-center text-slate-500">
+                        <li className="px-6 py-8 text-center text-muted-foreground">
                           No classes assigned
                         </li>
                       ) : (
@@ -188,20 +188,20 @@ export default function TeacherDashboard() {
                           <li key={c.id}>
                             <button
                               onClick={() => setSelectedClassId(c.id)}
-                              className={`w-full text-left px-6 py-4 hover:bg-slate-50 transition ${
-                                selectedClassId === c.id ? 'bg-blue-50 border-l-4 border-blue-600' : ''
+                              className={`w-full text-left px-6 py-4 hover:bg-muted/50 transition ${
+                                selectedClassId === c.id ? 'bg-primary/10 border-l-4 border-primary' : ''
                               }`}
                             >
                               <div className="flex justify-between items-start">
                                 <div>
-                                  <p className="font-medium text-slate-900">{c.name}</p>
-                                  <p className="text-sm text-slate-500 mt-1">{c.schedule}</p>
+                                  <p className="font-medium text-foreground">{c.name}</p>
+                                  <p className="text-sm text-muted-foreground mt-1">{c.schedule}</p>
                                 </div>
                                 <div className="text-right">
                                   <p className="text-lg font-bold text-green-600">
                                     {c.presentToday}/{c.totalEnrolled}
                                   </p>
-                                  <p className="text-xs text-slate-500">present</p>
+                                  <p className="text-xs text-muted-foreground">present</p>
                                 </div>
                               </div>
                             </button>
@@ -215,12 +215,12 @@ export default function TeacherDashboard() {
                 <Card>
                   <CardHeader className="flex justify-between items-center">
                     <div>
-                      <CardTitle className="text-lg font-semibold text-slate-900">
+                      <CardTitle className="text-lg font-semibold text-foreground">
                         Present Today
                         {selectedClass ? ` — ${selectedClass.name}` : ''}
                       </CardTitle>
                       {lastUpdated && (
-                        <p className="text-xs text-slate-400 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           Updated {lastUpdated.toLocaleTimeString()} · refreshes every 5s
                         </p>
                       )}
@@ -232,23 +232,23 @@ export default function TeacherDashboard() {
                   </CardHeader>
                   <CardContent className="p-0">
                     {!selectedClassId ? (
-                      <div className="px-6 py-12 text-center text-slate-500">
+                      <div className="px-6 py-12 text-center text-muted-foreground">
                         Select a class to view present students
                       </div>
                     ) : presentStudents.length === 0 ? (
-                      <div className="px-6 py-12 text-center text-slate-500">
+                      <div className="px-6 py-12 text-center text-muted-foreground">
                         No students marked present yet
                       </div>
                     ) : (
-                      <ul className="divide-y divide-slate-100 max-h-96 overflow-y-auto">
+                      <ul className="divide-y divide-border max-h-96 overflow-y-auto">
                         {presentStudents.map((student) => (
                           <li
                             key={student.id}
                             className="px-6 py-4 flex items-center justify-between"
                           >
                             <div>
-                              <p className="font-medium text-slate-900">{student.name}</p>
-                              <p className="text-sm text-slate-500">
+                              <p className="font-medium text-foreground">{student.name}</p>
+                              <p className="text-sm text-muted-foreground">
                                 {student.student_id} · {student.email}
                               </p>
                             </div>
@@ -261,7 +261,7 @@ export default function TeacherDashboard() {
                     )}
 
                     {selectedClass && (
-                      <div className="px-6 py-3 border-t border-slate-200 bg-slate-50 text-sm text-slate-600">
+                      <div className="px-6 py-3 border-t border-border bg-muted text-sm text-muted-foreground">
                         {presentStudents.length} of {selectedClass.totalEnrolled} enrolled students
                         present
                       </div>
