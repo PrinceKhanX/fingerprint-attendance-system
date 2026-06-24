@@ -157,9 +157,9 @@ function LoginPageContent() {
           {/* Top accent bar */}
           <div className="h-2 transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
 
-          <div className="p-14 space-y-10">
-            {/* Tiny brand mark */}
-            <div className="text-center">
+          <div className="p-14 space-y-8">
+            {/* Brand mark - AT THE TOP */}
+            <div className="text-center pb-4 border-b border-slate-100">
               <Link href="/" className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors">
                 <Fingerprint className="w-3.5 h-3.5" />
                 <span className="font-medium">Fingerprint Attendance</span>
@@ -167,7 +167,7 @@ function LoginPageContent() {
             </div>
 
             {/* Header */}
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-4 pt-2">
               {/* Large fingerprint icon with glow */}
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 mb-3 relative">
                 <div className="absolute inset-0 rounded-2xl opacity-20 blur-xl transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
