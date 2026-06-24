@@ -4,17 +4,26 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { 
-  LayoutDashboard, 
-  Users, 
-  BookOpen, 
-  UserCheck, 
-  BarChart3, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useTheme } from '@/components/theme-provider'
+import {
+  LayoutDashboard,
+  Users,
+  BookOpen,
+  UserCheck,
+  BarChart3,
   LogOut,
   Menu,
   X,
   User,
-  Shield
+  Shield,
+  Moon,
+  Sun,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -26,6 +35,7 @@ interface SidebarProps {
 export function DashboardSidebar({ role, userName, onLogout }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+  const { theme, setTheme } = useTheme()
 
   const adminNavItems = [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -115,7 +125,31 @@ export function DashboardSidebar({ role, userName, onLogout }: SidebarProps) {
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t border-slate-200">
+          <div className="p-4 border-t border-slate-200 space-y-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`
+                    w-full justify-start gap-3
+                    ${collapsed ? 'px-3' : 'px-4'}
+                  `}
+                >
+                  {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  {!collapsed && <span>{theme === 'dark' ? 'Dark' : 'Light'}</span>}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme('light')}>
+                  <Sun className="mr-2 h-4 w-4" />
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                  <Moon className="mr-2 h-4 w-4" />
+                  Dark
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant="ghost"
               className={`

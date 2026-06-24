@@ -17,6 +17,8 @@ import {
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useTheme } from '@/components/theme-provider'
+import { Moon, Sun } from 'lucide-react'
 
 interface DailyAttendanceData {
   date: string
@@ -53,6 +55,7 @@ export default function AnalyticsPage() {
   const [lowAttendanceStudents, setLowAttendanceStudents] = useState<LowAttendanceStudent[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     async function loadData() {
@@ -116,9 +119,18 @@ export default function AnalyticsPage() {
             <h1 className="text-2xl font-bold text-slate-900">Attendance Analytics</h1>
             <p className="text-slate-600">View attendance trends and insights</p>
           </div>
-          <Link href="/admin/dashboard">
-            <Button variant="outline">Back to Dashboard</Button>
-          </Link>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Link href="/admin/dashboard">
+              <Button variant="outline">Back to Dashboard</Button>
+            </Link>
+          </div>
         </div>
 
         {/* Daily Attendance Rate Line Chart */}

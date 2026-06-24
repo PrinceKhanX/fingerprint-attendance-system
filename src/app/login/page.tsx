@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useTheme } from '@/components/theme-provider'
+import { Moon, Sun } from 'lucide-react'
 
 function LoginPageContent() {
   const searchParams = useSearchParams()
@@ -20,6 +22,7 @@ function LoginPageContent() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     if (roleParam) {
@@ -67,6 +70,15 @@ function LoginPageContent() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="absolute top-4 right-4">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        >
+          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </Button>
+      </div>
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold">Fingerprint Attendance</CardTitle>
