@@ -149,19 +149,21 @@ function LoginPageContent() {
         <div className="bg-white dark:bg-slate-800 shadow-2xl shadow-slate-300/50 dark:shadow-slate-900/50 rounded-[24px] overflow-hidden border border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300">
           <div className="grid lg:grid-cols-2">
             {/* Left column - Branding (desktop only) */}
-            <div className="hidden lg:flex p-8 lg:p-16 flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden">
+            <div className="hidden lg:flex p-6 lg:p-12 flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden">
               {/* Background decorative elements */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/10 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
                 <div className="absolute bottom-10 right-10 w-64 h-64 bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
               </div>
 
-              <div className="relative z-10 space-y-10">
+              <div className="relative z-10 space-y-8">
                 {/* Brand mark */}
-                <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-                  <Fingerprint className="w-4 h-4" />
-                  <span className="font-medium">Fingerprint Attendance</span>
-                </Link>
+                <div className="mb-4">
+                  <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+                    <Fingerprint className="w-4 h-4" />
+                    <span className="font-medium">Fingerprint Attendance</span>
+                  </Link>
+                </div>
 
                 {/* Large fingerprint icon */}
                 <div className="inline-flex items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl relative">
@@ -209,12 +211,12 @@ function LoginPageContent() {
                 </Link>
               </div>
 
-              {/* Desktop-only form header with role title */}
-              <div className="hidden lg:block">
-                <h1 className="text-3xl font-bold transition-all duration-300 mb-2" style={{ color: currentColor.primary }}>
+              {/* Form header with role title (visible on both mobile and desktop) */}
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold transition-all duration-300 mb-2" style={{ color: currentColor.primary }}>
                   {roleTitles[role as keyof typeof roleTitles] || 'Login'}
                 </h1>
-                <p className="text-base text-slate-500 dark:text-slate-400 font-medium">Sign in to your account</p>
+                <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium">Sign in to your account</p>
               </div>
 
             {/* Error alert */}
