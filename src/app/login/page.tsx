@@ -327,38 +327,6 @@ function LoginPageContent() {
               </p>
             </div>
 
-            {/* Demo credentials */}
-            <div className="pt-4 sm:pt-6 border-t border-slate-200 dark:border-slate-700">
-              <button
-                type="button"
-                onClick={() => setShowDemo(!showDemo)}
-                className="w-full flex items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors py-2 font-medium"
-              >
-                <span>Demo Credentials</span>
-                <ChevronRight className={`h-3 w-3 transition-transform ${showDemo ? 'rotate-90' : ''}`} />
-              </button>
-              {showDemo && (
-                <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-700">
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold" style={{ color: roleColors.ADMIN.primary }}>Admin:</span>
-                    <span className="font-mono text-slate-900 dark:text-slate-100">admin@example.com / admin123</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold" style={{ color: roleColors.TEACHER.primary }}>Teacher:</span>
-                    <span className="font-mono text-slate-900 dark:text-slate-100">teacher@example.com / teacher123</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold" style={{ color: roleColors.STUDENT.primary }}>Student:</span>
-                    <span className="font-mono text-slate-900 dark:text-slate-100">student@example.com / student123</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold" style={{ color: roleColors.GUARDIAN.primary }}>Guardian:</span>
-                    <span className="font-mono text-slate-900 dark:text-slate-100">guardian@example.com / guardian123</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Bottom accent bar - matches top accent bar for symmetry */}
             <div className="h-0.5 transition-all duration-300 rounded-full" style={{ backgroundColor: currentColor.primary }} />
             </div>
