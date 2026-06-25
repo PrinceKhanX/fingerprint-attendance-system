@@ -50,14 +50,19 @@ A modern, full-stack biometric attendance management system built with Next.js, 
 
 ### 🎨 UI/UX Features
 - **Modern Design**: Clean, professional interface with shadcn/ui components
-- **Dark Mode**: Toggle between light and dark themes
-- **Responsive Design**: Fully responsive across all devices
-- **Smooth Animations**: Micro-interactions and transitions
+- **Dark Mode**: Toggle between light and dark themes (persisted via localStorage)
+- **Responsive Design**: Fully responsive across all devices (mobile-first approach)
+- **Smooth Animations**: Micro-interactions and transitions throughout the application
 - **Role-Based Theming**: Dynamic color schemes per role
   - Admin: Blue (#2563EB)
   - Teacher: Teal (#0D9488)
   - Student: Amber (#F59E0B)
   - Guardian: Purple (#7C3AED)
+- **Two-Column Login Layout**: Desktop branding on left, form on right; stacks vertically on mobile
+- **Dynamic Email Placeholders**: Email input placeholder changes based on selected role
+- **Accent Bars**: Symmetrical top and bottom accent lines on login form for visual balance
+- **Smooth Gradients**: Fingerprint icon with smooth multi-color gradient (blue → indigo)
+- **Compact Mobile Header**: Condensed branding on mobile to keep form visible without scrolling
 
 ---
 
@@ -169,9 +174,12 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ### Accessing the Application
 
-1. **Landing Page**: Navigate to `/` to see role selection cards
-2. **Login Page**: Navigate to `/login` to sign in
-3. **Guardian Login**: Navigate to `/guardian/login` for guardian-specific login
+1. **Landing Page**: Navigate to `/` to see role selection cards with modern design and animations
+2. **Login Page**: Navigate to `/login` to sign in (unified login for all roles with role pre-selection via URL parameter)
+   - Use `?role=TEACHER` to pre-select Teacher role
+   - Use `?role=ADMIN` to pre-select Admin role
+   - Use `?role=STUDENT` to pre-select Student role
+   - Use `?role=GUARDIAN` to pre-select Guardian role
 
 ### Demo Credentials
 
@@ -470,12 +478,20 @@ For support, email support@fingerprint-attendance.com or open an issue in the re
 
 ### Phase 1 (Completed)
 - ✅ User authentication system
-- ✅ Role-based dashboards
+- ✅ Role-based dashboards (Admin, Teacher, Student, Guardian)
 - ✅ Basic attendance tracking
 - ✅ Real-time updates with Socket.io
-- ✅ Modern UI with shadcn/ui
-- ✅ Dark mode support
-- ✅ Responsive design
+- ✅ Modern UI with shadcn/ui components
+- ✅ Dark mode support (persisted via localStorage)
+- ✅ Responsive design (mobile-first approach)
+- ✅ Unified login page with role pre-selection
+- ✅ Two-column desktop login layout (branding left, form right)
+- ✅ Dynamic email placeholders based on selected role
+- ✅ Symmetrical accent bars on login form
+- ✅ Smooth gradient on fingerprint icon
+- ✅ Compact mobile header for better UX
+- ✅ Comprehensive demo seed data with Bangladeshi context
+- ✅ Guardian login integration with unified system
 
 ### Phase 2 (In Progress)
 - 🔄 Fingerprint sensor integration
