@@ -147,9 +147,9 @@ function LoginPageContent() {
 
       <div className={`w-full max-w-5xl lg:max-w-6xl relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className="bg-white dark:bg-slate-800 shadow-2xl shadow-slate-300/50 dark:shadow-slate-900/50 rounded-[24px] overflow-hidden border border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300">
-          <div className="grid lg:grid-cols-2">
+          <div className="grid lg:grid-cols-2 items-center">
             {/* Left column - Branding (desktop only) */}
-            <div className="hidden lg:flex p-6 lg:p-12 flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden">
+            <div className="hidden lg:flex p-8 lg:p-12 flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden">
               {/* Background decorative elements */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/10 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
@@ -193,15 +193,8 @@ function LoginPageContent() {
 
             {/* Right column - Form */}
             <div className="p-6 sm:p-8 lg:p-16 space-y-6 sm:space-y-8 relative">
-              {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-10 dark:opacity-20">
-                <svg viewBox="0 0 100 100" className="w-full h-full" style={{ fill: currentColor.primary }}>
-                  <path d="M0 100 L100 100 L100 0 Z" />
-                </svg>
-              </div>
-
-              {/* Top accent bar */}
-              <div className="h-2 transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
+              {/* Top accent bar - thinner, more subtle */}
+              <div className="h-0.5 transition-all duration-300 rounded-full" style={{ backgroundColor: currentColor.primary }} />
 
               {/* Mobile-only compact header */}
               <div className="lg:hidden flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-700">
