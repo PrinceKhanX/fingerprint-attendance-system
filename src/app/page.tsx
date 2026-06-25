@@ -108,6 +108,16 @@ export default function Home() {
             })}
           </div>
 
+          {/* Guardian link */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-slate-400">
+              Are you a guardian?{' '}
+              <Link href="/guardian/login" className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">
+                Click here
+              </Link>
+            </p>
+          </div>
+
           {/* Footer */}
           <div className="mt-10 pt-6 border-t border-slate-200 text-center">
             <p className="text-sm text-slate-500">
