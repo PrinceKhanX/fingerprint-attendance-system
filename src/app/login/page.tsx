@@ -122,16 +122,16 @@ function LoginPageContent() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden p-4 font-sans">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden p-4 font-sans transition-colors duration-300">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-400/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-400/5 dark:bg-purple-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       {/* Theme toggle */}
       <div className="absolute top-4 right-4 z-20">
@@ -139,16 +139,16 @@ function LoginPageContent() {
           variant="outline"
           size="icon"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="bg-white/80 backdrop-blur-sm border-slate-200/60"
+          className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200/60 dark:border-slate-700/60"
         >
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
       </div>
 
       <div className={`w-full max-w-[500px] relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        <div className="bg-white shadow-2xl shadow-slate-300/50 rounded-[24px] overflow-hidden border border-slate-200/50">
+        <div className="bg-white dark:bg-slate-800 shadow-2xl shadow-slate-300/50 dark:shadow-slate-900/50 rounded-[24px] overflow-hidden border border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300">
           {/* Decorative corner accent */}
-          <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
+          <div className="absolute top-0 right-0 w-32 h-32 opacity-10 dark:opacity-20">
             <svg viewBox="0 0 100 100" className="w-full h-full" style={{ fill: currentColor.primary }}>
               <path d="M0 100 L100 100 L100 0 Z" />
             </svg>
@@ -159,8 +159,8 @@ function LoginPageContent() {
 
           <div className="p-14 space-y-8">
             {/* Brand mark - AT THE TOP */}
-            <div className="text-center pb-4 border-b border-slate-100">
-              <Link href="/" className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors">
+            <div className="text-center pb-4 border-b border-slate-100 dark:border-slate-700">
+              <Link href="/" className="inline-flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
                 <Fingerprint className="w-3.5 h-3.5" />
                 <span className="font-medium">Fingerprint Attendance</span>
               </Link>
@@ -169,19 +169,19 @@ function LoginPageContent() {
             {/* Header */}
             <div className="text-center space-y-4 pt-2">
               {/* Large fingerprint icon with glow */}
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 mb-3 relative">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 mb-3 relative">
                 <div className="absolute inset-0 rounded-2xl opacity-20 blur-xl transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
-                <Fingerprint className="w-8 h-8 text-slate-600 relative z-10" />
+                <Fingerprint className="w-8 h-8 text-slate-600 dark:text-slate-300 relative z-10" />
               </div>
               <h1 className="text-4xl font-bold transition-all duration-300" style={{ color: currentColor.primary }}>
                 {roleTitles[role as keyof typeof roleTitles] || 'Login'}
               </h1>
-              <p className="text-base text-slate-500 font-medium">Sign in to your account</p>
+              <p className="text-base text-slate-500 dark:text-slate-400 font-medium">Sign in to your account</p>
             </div>
 
             {/* Error alert */}
             {error && (
-              <Alert variant="destructive" className="border-2 border-red-200">
+              <Alert variant="destructive" className="border-2 border-red-200 dark:border-red-800">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -190,7 +190,7 @@ function LoginPageContent() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Email</Label>
+                <Label htmlFor="email" className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -198,13 +198,13 @@ function LoginPageContent() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@example.com"
                   required
-                  className={`h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
+                  className={`h-14 px-5 border-2 rounded-2xl bg-white dark:bg-slate-700 ${currentColor.border} dark:border-slate-600 ${currentColor.hoverBorder} dark:hover:border-slate-500 focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500`}
                 />
               </div>
 
               {/* Password field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Password</Label>
+                <Label htmlFor="password" className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -212,22 +212,22 @@ function LoginPageContent() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className={`h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}
+                  className={`h-14 px-5 border-2 rounded-2xl bg-white dark:bg-slate-700 ${currentColor.border} dark:border-slate-600 ${currentColor.hoverBorder} dark:hover:border-slate-500 focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500`}
                 />
               </div>
 
               {/* Role dropdown */}
               <div className="space-y-2">
-                <Label htmlFor="role" className="text-sm font-bold text-slate-700 uppercase tracking-wide">Role</Label>
+                <Label htmlFor="role" className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Role</Label>
                 <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger id="role" className={`h-14 px-5 border-2 rounded-2xl ${currentColor.border} ${currentColor.hoverBorder} focus:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium`}>
+                  <SelectTrigger id="role" className={`h-14 px-5 border-2 rounded-2xl bg-white dark:bg-slate-700 ${currentColor.border} dark:border-slate-600 ${currentColor.hoverBorder} dark:hover:border-slate-500 focus:ring-2 ${currentColor.focus} transition-all duration-300 text-base font-medium text-slate-900 dark:text-slate-100`}>
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="STUDENT">Student</SelectItem>
-                    <SelectItem value="TEACHER">Teacher</SelectItem>
-                    <SelectItem value="ADMIN">Admin</SelectItem>
-                    <SelectItem value="GUARDIAN">Guardian</SelectItem>
+                  <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                    <SelectItem value="STUDENT" className="text-slate-900 dark:text-slate-100">Student</SelectItem>
+                    <SelectItem value="TEACHER" className="text-slate-900 dark:text-slate-100">Teacher</SelectItem>
+                    <SelectItem value="ADMIN" className="text-slate-900 dark:text-slate-100">Admin</SelectItem>
+                    <SelectItem value="GUARDIAN" className="text-slate-900 dark:text-slate-100">Guardian</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -239,10 +239,10 @@ function LoginPageContent() {
                   id="remember"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-5 h-5 rounded-lg border-slate-300 text-blue-600 focus:ring-blue-500 transition-all duration-200"
+                  className="w-5 h-5 rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-blue-600 focus:ring-blue-500 transition-all duration-200"
                   style={{ accentColor: currentColor.primary }}
                 />
-                <Label htmlFor="remember" className="text-sm text-slate-600 cursor-pointer font-medium">Remember me</Label>
+                <Label htmlFor="remember" className="text-sm text-slate-600 dark:text-slate-400 cursor-pointer font-medium">Remember me</Label>
               </div>
 
               {/* Login button */}
@@ -270,14 +270,14 @@ function LoginPageContent() {
             </form>
 
             {/* Links */}
-            <div className="space-y-4 pt-6 border-t border-slate-200">
-              <p className="text-center text-sm text-slate-500">
+            <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-700">
+              <p className="text-center text-sm text-slate-500 dark:text-slate-400">
                 <Link href="/guardian/login" className="hover:underline transition-colors font-semibold" style={{ color: currentColor.primary }}>
                   Guardian portal login
                 </Link>
               </p>
 
-              <p className="text-center text-sm text-slate-500">
+              <p className="text-center text-sm text-slate-500 dark:text-slate-400">
                 Don't have an account?{' '}
                 <Link href="/register" className="font-bold hover:underline transition-colors" style={{ color: currentColor.primary }}>
                   Register
@@ -285,7 +285,7 @@ function LoginPageContent() {
               </p>
 
               <p className="text-center text-sm">
-                <Link href="/" className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center gap-1 font-medium">
+                <Link href="/" className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors flex items-center justify-center gap-1 font-medium">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
@@ -295,32 +295,32 @@ function LoginPageContent() {
             </div>
 
             {/* Demo credentials */}
-            <div className="pt-6 border-t border-slate-200">
+            <div className="pt-6 border-t border-slate-200 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => setShowDemo(!showDemo)}
-                className="w-full flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors py-2 font-medium"
+                className="w-full flex items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors py-2 font-medium"
               >
                 <span>Demo Credentials</span>
                 <ChevronRight className={`h-3 w-3 transition-transform ${showDemo ? 'rotate-90' : ''}`} />
               </button>
               {showDemo && (
-                <div className="mt-4 space-y-3 text-sm text-slate-600 bg-slate-50 rounded-2xl p-5 border border-slate-200">
+                <div className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
                   <div className="flex justify-between items-center">
                     <span className="font-bold" style={{ color: roleColors.ADMIN.primary }}>Admin:</span>
-                    <span className="font-mono">admin@example.com / admin123</span>
+                    <span className="font-mono text-slate-900 dark:text-slate-100">admin@example.com / admin123</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="font-bold" style={{ color: roleColors.TEACHER.primary }}>Teacher:</span>
-                    <span className="font-mono">teacher@example.com / teacher123</span>
+                    <span className="font-mono text-slate-900 dark:text-slate-100">teacher@example.com / teacher123</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="font-bold" style={{ color: roleColors.STUDENT.primary }}>Student:</span>
-                    <span className="font-mono">student@example.com / student123</span>
+                    <span className="font-mono text-slate-900 dark:text-slate-100">student@example.com / student123</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="font-bold" style={{ color: roleColors.GUARDIAN.primary }}>Guardian:</span>
-                    <span className="font-mono">guardian@example.com / guardian123</span>
+                    <span className="font-mono text-slate-900 dark:text-slate-100">guardian@example.com / guardian123</span>
                   </div>
                 </div>
               )}
