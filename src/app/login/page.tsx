@@ -359,8 +359,8 @@ function LoginPageContent() {
               )}
             </div>
 
-            {/* Bottom accent bar - matches top accent bar for symmetry */}
-            <div className="h-0.5 transition-all duration-300 rounded-full" style={{ backgroundColor: currentColor.primary }} />
+            {/* Bottom accent bar - matches top accent bar for symmetry (desktop only) */}
+            <div className="hidden lg:block h-0.5 transition-all duration-300 rounded-full" style={{ backgroundColor: currentColor.primary }} />
             </div>
           </div>
         </div>
