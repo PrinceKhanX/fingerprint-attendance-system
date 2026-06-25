@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { AIAssistant } from '@/components/AIAssistant'
 
 interface UserRecord {
   id: string
@@ -780,6 +781,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+      <AIAssistant role="ADMIN" />
     </div>
   )
 }

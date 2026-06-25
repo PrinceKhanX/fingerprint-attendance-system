@@ -7,6 +7,7 @@ import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import PushNotifications from '@/components/PushNotifications'
+import { AIAssistant } from '@/components/AIAssistant'
 
 interface ChildData {
   id: string
@@ -212,6 +213,7 @@ export default function GuardianDashboardPage() {
           </p>
         </div>
       </main>
+      <AIAssistant role="GUARDIAN" />
     </div>
   )
 }

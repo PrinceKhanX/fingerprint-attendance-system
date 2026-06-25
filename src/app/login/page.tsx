@@ -89,7 +89,10 @@ function LoginPageContent() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const isGuardian = role === 'GUARDIAN'
+      const endpoint = isGuardian ? '/api/guardian/login' : '/api/auth/login'
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -108,9 +111,11 @@ function LoginPageContent() {
         ADMIN: '/admin/dashboard',
         TEACHER: '/teacher/dashboard',
         STUDENT: '/student/dashboard',
+        GUARDIAN: '/guardian/dashboard',
       }
 
-      const redirectUrl = roleRoutes[data.user.role] || '/login'
+      const userRole = isGuardian ? 'GUARDIAN' : data.user.role
+      const redirectUrl = roleRoutes[userRole] || '/login'
       console.log(`Login successful, redirecting to ${redirectUrl}`)
       
       window.location.href = redirectUrl

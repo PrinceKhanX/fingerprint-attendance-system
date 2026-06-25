@@ -6,6 +6,7 @@ import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import PushNotifications from '@/components/PushNotifications'
+import { AIAssistant } from '@/components/AIAssistant'
 
 type DayStatus = 'PRESENT' | 'LATE' | 'ABSENT'
 
@@ -347,6 +348,7 @@ export default function StudentDashboard() {
           )}
         </div>
       </main>
+      <AIAssistant role="STUDENT" />
     </div>
   )
 }
