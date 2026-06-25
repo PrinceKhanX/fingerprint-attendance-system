@@ -229,7 +229,7 @@ function LoginPageContent() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@example.com"
+                  placeholder={role === 'ADMIN' ? 'admin@example.com' : role === 'TEACHER' ? 'teacher@example.com' : role === 'STUDENT' ? 'student@example.com' : 'guardian@example.com'}
                   required
                   className={`h-12 sm:h-14 px-4 sm:px-5 border-2 rounded-2xl bg-white dark:bg-slate-700 ${currentColor.border} dark:border-slate-600 ${currentColor.hoverBorder} dark:hover:border-slate-500 focus-visible:ring-2 ${currentColor.focus} transition-all duration-300 text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500`}
                 />
