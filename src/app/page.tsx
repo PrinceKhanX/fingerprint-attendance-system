@@ -42,7 +42,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+    <main className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse" />
@@ -54,29 +54,29 @@ export default function Home() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className={`w-full max-w-4xl relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        <div className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur-xl p-10 shadow-2xl shadow-slate-300/50">
+        <div className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur-xl p-6 sm:p-10 shadow-2xl shadow-slate-300/50">
           {/* Header */}
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg mb-6 animate-float">
-              <Fingerprint className="w-10 h-10 text-white" />
+          <div className="text-center mb-8 sm:mb-10">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg mb-4 sm:mb-6 animate-float">
+              <Fingerprint className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">
+            <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-3 sm:mb-4">
               Fingerprint Attendance
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto px-4">
               Secure, efficient, and modern attendance tracking system. Select your role to get started.
             </p>
           </div>
 
           {/* Cards */}
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 sm:grid-cols-3">
             {cards.map((card, index) => {
               const Icon = card.icon
               return (
                 <Link
                   key={card.title}
                   href={card.href}
-                  className={`group relative overflow-hidden rounded-2xl border-2 ${card.borderColor} ${card.hoverBorder} bg-white p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105`}
+                  className={`group relative overflow-hidden rounded-2xl border-2 ${card.borderColor} ${card.hoverBorder} bg-white p-5 sm:p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105`}
                   style={{
                     animationDelay: `${index * 150}ms`,
                   }}
@@ -85,15 +85,15 @@ export default function Home() {
                   <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
 
                   {/* Icon */}
-                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${card.color} shadow-md mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-7 h-7 text-white" />
+                  <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${card.color} shadow-md mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                   </div>
 
                   {/* Content */}
-                  <h2 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-blue-600 group-hover:bg-clip-text transition-all duration-300">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-blue-600 group-hover:bg-clip-text transition-all duration-300">
                     {card.title}
                   </h2>
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                     {card.description}
                   </p>
 
@@ -109,8 +109,8 @@ export default function Home() {
           </div>
 
           {/* Guardian link */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-slate-400">
+          <div className="mt-6 sm:mt-8 text-center">
+            <p className="text-xs sm:text-sm text-slate-400">
               Are you a guardian?{' '}
               <Link href="/login?role=GUARDIAN" className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">
                 Click here
@@ -119,8 +119,8 @@ export default function Home() {
           </div>
 
           {/* Footer */}
-          <div className="mt-10 pt-6 border-t border-slate-200 text-center">
-            <p className="text-sm text-slate-500">
+          <div className="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-slate-200 text-center">
+            <p className="text-xs sm:text-sm text-slate-500">
               © {new Date().getFullYear()} Fingerprint Attendance System. All rights reserved.
             </p>
           </div>
