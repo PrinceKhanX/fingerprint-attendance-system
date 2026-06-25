@@ -145,39 +145,73 @@ function LoginPageContent() {
         </Button>
       </div>
 
-      <div className={`w-full max-w-[500px] relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div className={`w-full max-w-5xl lg:max-w-6xl relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className="bg-white dark:bg-slate-800 shadow-2xl shadow-slate-300/50 dark:shadow-slate-900/50 rounded-[24px] overflow-hidden border border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300">
-          {/* Decorative corner accent */}
-          <div className="absolute top-0 right-0 w-32 h-32 opacity-10 dark:opacity-20">
-            <svg viewBox="0 0 100 100" className="w-full h-full" style={{ fill: currentColor.primary }}>
-              <path d="M0 100 L100 100 L100 0 Z" />
-            </svg>
-          </div>
-
-          {/* Top accent bar */}
-          <div className="h-2 transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
-
-          <div className="p-6 sm:p-8 md:p-14 space-y-6 sm:space-y-8">
-            {/* Brand mark - AT THE TOP */}
-            <div className="text-center pb-3 sm:pb-4 border-b border-slate-100 dark:border-slate-700">
-              <Link href="/" className="inline-flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-                <Fingerprint className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="font-medium">Fingerprint Attendance</span>
-              </Link>
-            </div>
-
-            {/* Header */}
-            <div className="text-center space-y-3 sm:space-y-4 pt-2">
-              {/* Large fingerprint icon with glow */}
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 mb-2 sm:mb-3 relative">
-                <div className="absolute inset-0 rounded-2xl opacity-20 blur-xl transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
-                <Fingerprint className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-slate-600 dark:text-slate-300 relative z-10" />
+          <div className="grid lg:grid-cols-2">
+            {/* Left column - Branding */}
+            <div className="p-8 sm:p-10 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden">
+              {/* Background decorative elements */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/10 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-10 right-10 w-64 h-64 bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
               </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold transition-all duration-300" style={{ color: currentColor.primary }}>
-                {roleTitles[role as keyof typeof roleTitles] || 'Login'}
-              </h1>
-              <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium">Sign in to your account</p>
+
+              <div className="relative z-10 space-y-8">
+                {/* Brand mark */}
+                <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+                  <Fingerprint className="w-4 h-4" />
+                  <span className="font-medium">Fingerprint Attendance</span>
+                </Link>
+
+                {/* Large fingerprint icon */}
+                <div className="inline-flex items-center justify-center w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl mb-6 relative">
+                  <div className="absolute inset-0 rounded-3xl opacity-30 blur-2xl bg-blue-500" />
+                  <Fingerprint className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-white relative z-10" />
+                </div>
+
+                {/* App title and tagline */}
+                <div className="space-y-4">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                    Fingerprint Attendance
+                  </h1>
+                  <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-md">
+                    Secure, efficient, and modern attendance tracking system. Experience seamless attendance management with biometric precision.
+                  </p>
+                </div>
+
+                {/* Role indicator */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border border-slate-200 dark:border-slate-600">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: currentColor.primary }} />
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {roleTitles[role as keyof typeof roleTitles] || 'Login'}
+                  </span>
+                </div>
+              </div>
             </div>
+
+            {/* Right column - Form */}
+            <div className="p-6 sm:p-8 lg:p-16 space-y-6 sm:space-y-8 relative">
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-10 dark:opacity-20">
+                <svg viewBox="0 0 100 100" className="w-full h-full" style={{ fill: currentColor.primary }}>
+                  <path d="M0 100 L100 100 L100 0 Z" />
+                </svg>
+              </div>
+
+              {/* Top accent bar */}
+              <div className="h-2 transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
+
+              {/* Mobile-only header (hidden on desktop) */}
+              <div className="lg:hidden text-center space-y-3 sm:space-y-4 pt-2">
+                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 mb-2 sm:mb-3 relative">
+                  <div className="absolute inset-0 rounded-2xl opacity-20 blur-xl transition-all duration-300" style={{ backgroundColor: currentColor.primary }} />
+                  <Fingerprint className="w-6 h-6 sm:w-7 sm:h-7 text-slate-600 dark:text-slate-300 relative z-10" />
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-bold transition-all duration-300" style={{ color: currentColor.primary }}>
+                  {roleTitles[role as keyof typeof roleTitles] || 'Login'}
+                </h1>
+                <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium">Sign in to your account</p>
+              </div>
 
             {/* Error alert */}
             {error && (
@@ -324,6 +358,7 @@ function LoginPageContent() {
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </div>
