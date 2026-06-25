@@ -147,7 +147,7 @@ function LoginPageContent() {
 
       <div className={`w-full max-w-5xl lg:max-w-6xl relative z-10 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className="bg-white dark:bg-slate-800 shadow-2xl shadow-slate-300/50 dark:shadow-slate-900/50 rounded-[24px] overflow-hidden border border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300">
-          <div className="grid lg:grid-cols-2 items-center">
+          <div className="grid lg:grid-cols-2">
             {/* Left column - Branding (desktop only) */}
             <div className="hidden lg:flex p-8 lg:p-12 flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden">
               {/* Background decorative elements */}
@@ -166,7 +166,7 @@ function LoginPageContent() {
                 </div>
 
                 {/* Large fingerprint icon */}
-                <div className="inline-flex items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl relative">
+                <div className="inline-flex items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 shadow-2xl relative">
                   <div className="absolute inset-0 rounded-3xl opacity-30 blur-2xl bg-blue-500" />
                   <Fingerprint className="w-16 h-16 lg:w-20 lg:h-20 text-white relative z-10" />
                 </div>
@@ -358,6 +358,9 @@ function LoginPageContent() {
                 </div>
               )}
             </div>
+
+            {/* Bottom accent bar - matches top accent bar for symmetry */}
+            <div className="h-0.5 transition-all duration-300 rounded-full" style={{ backgroundColor: currentColor.primary }} />
             </div>
           </div>
         </div>
