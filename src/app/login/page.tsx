@@ -156,7 +156,7 @@ function LoginPageContent() {
                 <div className="absolute bottom-10 right-10 w-64 h-64 bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
               </div>
 
-              <div className="relative z-10 space-y-8 flex flex-col h-full">
+              <div className="relative z-10 space-y-8">
                 {/* Brand mark */}
                 <div className="mb-4">
                   <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
@@ -188,9 +188,6 @@ function LoginPageContent() {
                     {roleTitles[role as keyof typeof roleTitles] || 'Login'}
                   </span>
                 </div>
-
-                {/* Bottom accent bar - matches right column for symmetry */}
-                <div className="mt-auto h-0.5 transition-all duration-300 rounded-full" style={{ backgroundColor: currentColor.primary }} />
               </div>
             </div>
 
