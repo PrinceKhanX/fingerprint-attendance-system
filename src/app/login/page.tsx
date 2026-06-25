@@ -272,7 +272,7 @@ function LoginPageContent() {
             {/* Links */}
             <div className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-700">
               <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-                <Link href="/guardian/login" className="hover:underline transition-colors font-semibold" style={{ color: currentColor.primary }}>
+                <Link href="/login?role=GUARDIAN" className="hover:underline transition-colors font-semibold" style={{ color: currentColor.primary }}>
                   Guardian portal login
                 </Link>
               </p>

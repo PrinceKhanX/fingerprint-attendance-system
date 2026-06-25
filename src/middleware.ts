@@ -12,10 +12,6 @@ const roleRoutes: Record<string, string> = {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  if (pathname === '/guardian/login') {
-    return NextResponse.next()
-  }
-
   // Check if route is protected
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
@@ -26,7 +22,7 @@ export async function middleware(request: NextRequest) {
         : request.cookies.get('auth_token')?.value
 
     if (!token) {
-      const loginUrl = pathname.startsWith('/guardian') ? '/guardian/login' : '/login'
+      const loginUrl = pathname.startsWith('/guardian') ? '/login?role=GUARDIAN' : '/login'
       return NextResponse.redirect(new URL(loginUrl, request.url))
     }
 

@@ -48,7 +48,7 @@ export default function GuardianDashboardPage() {
     try {
       const res = await fetch('/api/guardian/dashboard')
       if (res.status === 401) {
-        router.push('/guardian/login')
+        router.push('/login?role=GUARDIAN')
         return
       }
       setData(await res.json())
@@ -66,7 +66,7 @@ export default function GuardianDashboardPage() {
   const handleLogout = async () => {
     setLogoutLoading(true)
     await fetch('/api/guardian/logout', { method: 'POST' })
-    router.push('/guardian/login')
+    router.push('/login?role=GUARDIAN')
   }
 
   return (

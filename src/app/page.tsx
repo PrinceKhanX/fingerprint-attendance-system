@@ -112,7 +112,7 @@ export default function Home() {
           <div className="mt-8 text-center">
             <p className="text-sm text-slate-400">
               Are you a guardian?{' '}
-              <Link href="/guardian/login" className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">
+              <Link href="/login?role=GUARDIAN" className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">
                 Click here
               </Link>
             </p>
