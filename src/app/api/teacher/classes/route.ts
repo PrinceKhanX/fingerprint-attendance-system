@@ -6,6 +6,12 @@ export async function GET(request: NextRequest) {
   const teacher = await authorizeTeacher(request)
   if (!teacher) return teacherUnauthorized()
 
+  // Fetch teacher's name
+  const user = await prisma.user.findUnique({
+    where: { id: teacher.userId },
+    select: { name: true },
+  })
+
   const classes = await prisma.class.findMany({
     where: { teacherId: teacher.teacherId },
     select: {
@@ -17,5 +23,5 @@ export async function GET(request: NextRequest) {
     orderBy: { name: 'asc' },
   })
 
-  return NextResponse.json({ classes })
+  return NextResponse.json({ classes, teacherName: user?.name ?? '' })
 }

@@ -55,11 +55,19 @@ export default function AnalyticsPage() {
   const [lowAttendanceStudents, setLowAttendanceStudents] = useState<LowAttendanceStudent[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [userRole, setUserRole] = useState<'ADMIN' | 'TEACHER' | 'STUDENT' | 'GUARDIAN' | null>(null)
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     async function loadData() {
       try {
+        // Fetch user role to determine correct dashboard URL
+        const userRes = await fetch('/api/auth/user')
+        if (userRes.ok) {
+          const userData = await userRes.json()
+          setUserRole(userData.role)
+        }
+
         const [dailyRes, classRes, lowRes] = await Promise.all([
           fetch('/api/analytics/daily-attendance'),
           fetch('/api/analytics/class-attendance'),
@@ -127,9 +135,20 @@ export default function AnalyticsPage() {
             >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
-            <Link href="/admin/dashboard">
-              <Button variant="outline">Back to Dashboard</Button>
-            </Link>
+            <Button
+              variant="outline"
+              onClick={() => {
+                console.log('User role:', userRole)
+                const dashboardPath = userRole === 'TEACHER' ? '/teacher/dashboard' :
+                                    userRole === 'STUDENT' ? '/student/dashboard' :
+                                    userRole === 'GUARDIAN' ? '/guardian/dashboard' :
+                                    '/admin/dashboard'
+                console.log('Navigating to:', dashboardPath)
+                router.push(dashboardPath)
+              }}
+            >
+              Back to Dashboard
+            </Button>
           </div>
         </div>
 

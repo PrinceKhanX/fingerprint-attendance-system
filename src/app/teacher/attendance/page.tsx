@@ -44,6 +44,7 @@ export default function TeacherAttendancePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [userName, setUserName] = useState('')
 
   // Socket connection for real-time updates
   useSocket(selectedClassId, (event) => {
@@ -79,6 +80,10 @@ export default function TeacherAttendancePage() {
         setClasses(data.classes ?? [])
         if (data.classes?.length === 1) {
           setSelectedClassId(data.classes[0].id)
+        }
+        // Set teacher name if available
+        if (data.teacherName) {
+          setUserName(data.teacherName)
         }
       } catch {
         setError('Failed to load classes')
@@ -181,14 +186,16 @@ export default function TeacherAttendancePage() {
         <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Manual Attendance</h1>
-            <p className="text-sm text-slate-500 mt-1">Mark students present, late, or absent</p>
+            <p className="text-sm text-slate-500 mt-1">
+              {userName ? `Welcome, ${userName} · ` : ''}Mark students present, late, or absent
+            </p>
           </div>
-          <Link
-            href="/teacher/dashboard"
+          <button
+            onClick={() => router.push('/teacher/dashboard')}
             className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 transition"
           >
             Back to Dashboard
-          </Link>
+          </button>
         </div>
       </nav>
 
@@ -201,7 +208,7 @@ export default function TeacherAttendancePage() {
                 value={selectedClassId}
                 onChange={(e) => setSelectedClassId(e.target.value)}
                 disabled={loading}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 bg-white dark:bg-slate-800 dark:border-slate-600 px-3 py-2 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               >
                 <option value="">Select a class</option>
                 {classes.map((c) => (
@@ -217,7 +224,7 @@ export default function TeacherAttendancePage() {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 bg-white dark:bg-slate-800 dark:border-slate-600 px-3 py-2 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               />
             </div>
           </div>
