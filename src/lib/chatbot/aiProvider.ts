@@ -1,13 +1,18 @@
 import { getRoleContext } from './roleContext'
 import type { ChatRole } from './types'
 
+// RapidAPI walnut-chatbot integration - DISABLED
+// Free-text chatbot functionality removed; only quick-action buttons are now supported.
+// Uncomment and configure RAPIDAPI_KEY in .env if needed in the future.
+
+/*
 const WALNUT_HOST = 'walnut-chatbot.p.rapidapi.com'
 const WALNUT_URL = `https://${WALNUT_HOST}/wrt_transformer`
 
 /**
  * Calls Walnut Chatbot RapidAPI for explanatory / general-help questions only.
  * API key is read from server environment — never exposed to the client.
- */
+ *\/
 export async function askWalnutChatbot(question: string, role: ChatRole): Promise<string> {
   const apiKey = process.env.RAPIDAPI_KEY
   if (!apiKey) {
@@ -64,3 +69,4 @@ export async function askWalnutChatbot(question: string, role: ChatRole): Promis
 
   return raw.trim()
 }
+*/

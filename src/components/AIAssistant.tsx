@@ -1,9 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Bot, Loader2, MessageCircle, Send, X } from 'lucide-react'
+import { Bot, Loader2, MessageCircle, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { getQuickActions } from '@/lib/chatbot/roleContext'
 import type { ChatRole, ResponseSource } from '@/lib/chatbot/types'
@@ -41,12 +40,10 @@ function formatTime(iso: string) {
 
 export function AIAssistant({ role }: AIAssistantProps) {
   const [open, setOpen] = useState(false)
-  const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [hydrated, setHydrated] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const quickActions = getQuickActions(role)
 
@@ -95,11 +92,6 @@ export function AIAssistant({ role }: AIAssistantProps) {
     }
   }, [messages, open, loading])
 
-  useEffect(() => {
-    if (open) {
-      setTimeout(() => inputRef.current?.focus(), 100)
-    }
-  }, [open])
 
   const sendMessage = useCallback(
     async (text: string) => {
@@ -114,7 +106,6 @@ export function AIAssistant({ role }: AIAssistantProps) {
       }
 
       setMessages((prev) => [...prev, userMsg])
-      setInput('')
       setLoading(true)
 
       try {
@@ -161,10 +152,6 @@ export function AIAssistant({ role }: AIAssistantProps) {
     [loading]
   )
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    sendMessage(input)
-  }
 
   const clearHistory = () => {
     const welcome: ChatMessage = {
@@ -281,45 +268,18 @@ export function AIAssistant({ role }: AIAssistantProps) {
           </div>
 
           {/* Quick actions */}
-          {messages.length <= 1 && !loading && (
-            <div className="px-4 pb-2 flex flex-wrap gap-2">
-              {quickActions.map((action) => (
-                <button
-                  key={action.label}
-                  type="button"
-                  onClick={() => sendMessage(action.message)}
-                  className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                >
-                  {action.label}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Input */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex items-center gap-2 border-t border-border p-3 bg-card"
-          >
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about attendance or the system..."
-              disabled={loading}
-              maxLength={500}
-              className="rounded-xl"
-            />
-            <Button
-              type="submit"
-              size="icon"
-              disabled={loading || !input.trim()}
-              className="shrink-0 rounded-xl"
-              aria-label="Send message"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
+          <div className="px-4 pb-3 flex flex-wrap gap-2">
+            {quickActions.map((action) => (
+              <button
+                key={action.label}
+                type="button"
+                onClick={() => sendMessage(action.message)}
+                className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
