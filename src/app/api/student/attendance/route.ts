@@ -1,8 +1,10 @@
 import { AttendanceStatus } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { aggregateDayStatus, attendancePercentage } from '@/lib/schedule'
+import { getDayBounds } from '@/lib/attendance'
 import { authorizeStudent, studentUnauthorized } from '@/lib/studentAuth'
 import { prisma } from '@/lib/prisma'
+import { notifyAttendanceAlert } from '@/lib/notify'
 
 function monthBounds(monthStr: string) {
   const [year, month] = monthStr.split('-').map(Number)
@@ -75,6 +77,8 @@ export async function GET(request: NextRequest) {
     student: {
       name: auth.student.user.name,
       student_id: auth.student.student_id,
+      fingerprint_id: auth.student.fingerprint_id,
+      id: auth.student.id,
     },
     month: monthStr,
     stats: {
@@ -94,5 +98,105 @@ export async function GET(request: NextRequest) {
       marked_by: r.marked_by,
       timestamp: r.timestamp,
     })),
+  })
+}
+
+export async function POST(request: NextRequest) {
+  const auth = await authorizeStudent(request)
+  if (!auth) return studentUnauthorized()
+
+  const body = await request.json()
+  const { classId, date, status } = body
+
+  if (!classId || !date || !status) {
+    return NextResponse.json(
+      { error: 'Missing required fields: classId, date, status' },
+      { status: 400 }
+    )
+  }
+
+  if (!['PRESENT', 'LATE', 'ABSENT'].includes(status)) {
+    return NextResponse.json({ error: `Invalid status: ${status}` }, { status: 400 })
+  }
+
+  // Verify student is enrolled in the class
+  const enrollment = await prisma.enrollment.findFirst({
+    where: {
+      studentId: auth.studentId,
+      classId,
+    },
+  })
+
+  if (!enrollment) {
+    return NextResponse.json({ error: 'Student is not enrolled in this class' }, { status: 403 })
+  }
+
+  // Check if attendance already exists for this day
+  const { start, end } = getDayBounds(date)
+  const existing = await prisma.attendance.findFirst({
+    where: {
+      studentId: auth.studentId,
+      classId,
+      timestamp: { gte: start, lte: end },
+    },
+  })
+
+  if (existing) {
+    // If already PRESENT, block duplicate
+    if (existing.status === 'PRESENT') {
+      return NextResponse.json({ error: 'Attendance already marked as PRESENT for this class today' }, { status: 409 })
+    }
+    // If ABSENT or LATE, allow override to PRESENT
+    const attendance = await prisma.attendance.update({
+      where: { id: existing.id },
+      data: {
+        status: status as AttendanceStatus,
+        marked_by: 'SENSOR',
+        timestamp: new Date(),
+      },
+      include: {
+        class: { select: { name: true } },
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      updated: true,
+      attendance: {
+        id: attendance.id,
+        status: attendance.status,
+        className: attendance.class.name,
+        timestamp: attendance.timestamp,
+      },
+    })
+  }
+
+  // Create attendance record
+  const attendance = await prisma.attendance.create({
+    data: {
+      studentId: auth.studentId,
+      classId,
+      status: status as AttendanceStatus,
+      timestamp: new Date(),
+      marked_by: 'SENSOR',
+    },
+    include: {
+      class: { select: { name: true } },
+    },
+  })
+
+  // Trigger notification if absent or late
+  if (status === 'LATE' || status === 'ABSENT') {
+    await notifyAttendanceAlert(auth.studentId, classId, status as AttendanceStatus, date)
+  }
+
+  return NextResponse.json({
+    success: true,
+    attendance: {
+      id: attendance.id,
+      status: attendance.status,
+      className: attendance.class.name,
+      timestamp: attendance.timestamp,
+    },
   })
 }

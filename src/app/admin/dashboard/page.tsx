@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { Fingerprint, Check } from 'lucide-react'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -71,6 +72,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [userName, setUserName] = useState('')
+  const [fingerprintStage, setFingerprintStage] = useState<'idle' | 'place' | 'scanning' | 'lift' | 'success'>('idle')
 
   const handleLogout = async () => {
     try {
@@ -179,7 +181,30 @@ export default function AdminDashboard() {
     setSelectedClass(null)
     setSelectedEnrollment(null)
     setFormState({ fingerprint_id: student?.student?.fingerprint_id ?? '' })
+    setFingerprintStage('idle')
     setModalOpen(true)
+  }
+
+  const generateFingerprintId = () => {
+    return 'FP-' + Math.random().toString(36).substring(2, 10).toUpperCase()
+  }
+
+  const runFingerprintSimulation = async () => {
+    setFingerprintStage('place')
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    setFingerprintStage('scanning')
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    
+    setFingerprintStage('lift')
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    setFingerprintStage('success')
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
+    const newFingerprintId = generateFingerprintId()
+    setFormState({ fingerprint_id: newFingerprintId })
+    setFingerprintStage('idle')
   }
 
   const handleSaveUser = async () => {
@@ -270,20 +295,29 @@ export default function AdminDashboard() {
     setLoading(true)
     setError('')
     try {
+      const requestBody = {
+        studentId: selectedStudent.student?.id,
+        fingerprint_id: formState.fingerprint_id,
+      }
+      console.log('[Fingerprint Save] Request body:', requestBody)
+
       const res = await fetch('/api/admin/fingerprint', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId: selectedStudent.student?.id, fingerprint_id: formState.fingerprint_id }),
+        body: JSON.stringify(requestBody),
       })
 
+      const data = await res.json()
+      console.log('[Fingerprint Save] Response:', data)
+
       if (!res.ok) {
-        const data = await res.json()
         throw new Error(data.error || 'Failed to save fingerprint')
       }
 
       await fetchData()
       setModalOpen(false)
     } catch (err: any) {
+      console.error('[Fingerprint Save] Error:', err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -528,7 +562,14 @@ export default function AdminDashboard() {
               <div className="grid gap-4 md:grid-cols-2">
                 {students.map((student) => (
                   <div key={student.id} className="rounded-2xl border border-border p-4">
-                    <p className="font-semibold text-foreground">{student.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-foreground">{student.name}</p>
+                      {student.student?.fingerprint_id && (
+                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                          Fingerprint Registered
+                        </span>
+                      )}
+                    </div>
                     <p className="text-muted-foreground text-sm">{student.email}</p>
                     <p className="text-muted-foreground text-sm">Student ID: {student.student?.student_id}</p>
                     <p className="text-muted-foreground text-sm">Fingerprint ID: {student.student?.fingerprint_id || 'Not registered'}</p>
@@ -536,7 +577,7 @@ export default function AdminDashboard() {
                       onClick={() => openFingerprintModal(student)}
                       className="mt-3 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
                     >
-                      Register Fingerprint
+                      {student.student?.fingerprint_id ? 'Re-register Fingerprint' : 'Register Fingerprint'}
                     </button>
                   </div>
                 ))}
@@ -737,23 +778,73 @@ export default function AdminDashboard() {
               )}
 
               {activeTab === 'fingerprint' && selectedStudent && (
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block">
-                    <span className="text-sm font-medium text-slate-700">Student</span>
-                    <input
-                      value={selectedStudent.name}
-                      disabled
-                      className="mt-2 w-full rounded-xl border border-input bg-muted px-4 py-3"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-sm font-medium text-slate-700">Fingerprint ID</span>
-                    <input
-                      value={formState.fingerprint_id}
-                      onChange={(e) => setFormState({ ...formState, fingerprint_id: e.target.value })}
-                      className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </label>
+                <div className="flex flex-col items-center py-8">
+                  <div className="mb-4 text-center">
+                    <p className="text-sm font-medium text-foreground">Student</p>
+                    <p className="text-lg font-semibold text-foreground">{selectedStudent.name}</p>
+                  </div>
+
+                  {fingerprintStage === 'idle' && (
+                    <div className="flex flex-col items-center gap-4">
+                      <Fingerprint className="w-32 h-32 text-blue-500" />
+                      <p className="text-muted-foreground">Click below to start fingerprint registration</p>
+                      <button
+                        onClick={runFingerprintSimulation}
+                        disabled={loading}
+                        className="rounded-lg bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 disabled:opacity-50"
+                      >
+                        {loading ? 'Processing...' : 'Start Registration'}
+                      </button>
+                    </div>
+                  )}
+
+                  {fingerprintStage === 'place' && (
+                    <div className="flex flex-col items-center gap-4">
+                      <Fingerprint className="w-32 h-32 text-blue-500 animate-pulse" />
+                      <p className="text-lg font-semibold text-blue-600">Place finger on scanner...</p>
+                    </div>
+                  )}
+
+                  {fingerprintStage === 'scanning' && (
+                    <div className="flex flex-col items-center gap-4 relative">
+                      <div className="relative">
+                        <Fingerprint className="w-32 h-32 text-blue-500" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-full h-1 bg-blue-400 animate-[scan_1.5s_linear_forwards]" style={{ animation: 'scan 1.5s linear forwards' }}></div>
+                        </div>
+                      </div>
+                      <p className="text-lg font-semibold text-blue-600">Scanning...</p>
+                      <style jsx>{`
+                        @keyframes scan {
+                          0% { transform: translateY(-64px); }
+                          100% { transform: translateY(64px); }
+                        }
+                      `}</style>
+                    </div>
+                  )}
+
+                  {fingerprintStage === 'lift' && (
+                    <div className="flex flex-col items-center gap-4">
+                      <Fingerprint className="w-32 h-32 text-blue-500" />
+                      <p className="text-lg font-semibold text-blue-600">Lift finger...</p>
+                    </div>
+                  )}
+
+                  {fingerprintStage === 'success' && (
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-32 h-32 rounded-full bg-green-500 flex items-center justify-center">
+                        <Check className="w-16 h-16 text-white" />
+                      </div>
+                      <p className="text-lg font-semibold text-green-600">Registered!</p>
+                    </div>
+                  )}
+
+                  {formState.fingerprint_id && fingerprintStage === 'idle' && (
+                    <div className="mt-6 text-center">
+                      <p className="text-sm text-muted-foreground">Generated Fingerprint ID:</p>
+                      <p className="text-lg font-mono font-semibold text-foreground">{formState.fingerprint_id}</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

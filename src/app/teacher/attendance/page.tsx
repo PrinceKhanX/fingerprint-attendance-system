@@ -170,7 +170,19 @@ export default function TeacherAttendancePage() {
       }
 
       setSuccess(`Saved attendance for ${data.saved} student(s)`)
-      await loadStudents()
+      // Refetch attendance data without triggering state changes that affect socket
+      const attendanceRes = await fetch(
+        `/api/teacher/attendance?classId=${selectedClassId}&date=${selectedDate}`
+      )
+      const attendanceData = await attendanceRes.json()
+      if (attendanceRes.ok) {
+        setStudents(attendanceData.students ?? [])
+        const initial: Record<string, AttendanceStatus> = {}
+        for (const s of attendanceData.students ?? []) {
+          if (s.status) initial[s.id] = s.status
+        }
+        setStatusMap(initial)
+      }
     } catch {
       setError('Failed to save attendance')
     } finally {

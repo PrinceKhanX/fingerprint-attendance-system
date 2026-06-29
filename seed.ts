@@ -94,6 +94,17 @@ async function seed() {
 
   console.log('✓ Created admin user')
 
+  // Create a single guardian for testing (all students will use this guardian)
+  const guardian = await prisma.guardian.create({
+    data: {
+      name: 'Test Guardian',
+      email: 'tasfirprince@gmail.com',
+      password: guardianPassword,
+      phone: `+8801${Math.floor(100000000 + Math.random() * 900000000)}`,
+    },
+  })
+  console.log('✓ Created test guardian')
+
   // Create teachers
   const teacherRecords = []
   for (const teacher of teachers) {
@@ -121,16 +132,6 @@ async function seed() {
   const studentRecords = []
   for (let i = 0; i < students.length; i++) {
     const student = students[i]
-    
-    // Create guardian for each student
-    const guardian = await prisma.guardian.create({
-      data: {
-        name: `${student.name}'s Guardian`,
-        email: `guardian.${student.name.toLowerCase()}@example.com`,
-        password: guardianPassword,
-        phone: `+8801${Math.floor(100000000 + Math.random() * 900000000)}`,
-      },
-    })
 
     const user = await prisma.user.create({
       data: {
@@ -243,7 +244,7 @@ async function seed() {
   console.log(`Admin - admin@example.com / admin123`)
   console.log(`Teachers - ${teachers.map(t => `${t.email} / teacher123`).join(', ')}`)
   console.log(`Students - ${students[0].email} / student123 (and others)`)
-  console.log(`Guardians - guardian.sajid@example.com / guardian123 (and others)`)
+  console.log(`Guardians - tasfirprince@gmail.com / guardian123 (all guardians)`)
 }
 
 seed()

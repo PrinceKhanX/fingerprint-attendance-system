@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Fingerprint, Check, X } from 'lucide-react'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -18,7 +19,7 @@ interface ClassItem {
 }
 
 interface AttendanceData {
-  student: { name: string; student_id: string }
+  student: { name: string; student_id: string; fingerprint_id: string | null; id: string }
   month: string
   stats: {
     enrolledClasses: number
@@ -75,6 +76,10 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true)
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [userName, setUserName] = useState('')
+  const [attendanceModalOpen, setAttendanceModalOpen] = useState(false)
+  const [fingerprintStage, setFingerprintStage] = useState<'idle' | 'place' | 'scanning' | 'success' | 'error'>('idle')
+  const [attendanceError, setAttendanceError] = useState('')
+  const [markingAttendance, setMarkingAttendance] = useState(false)
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -128,6 +133,74 @@ export default function StudentDashboard() {
     }
   }
 
+  const openAttendanceModal = () => {
+    setAttendanceModalOpen(true)
+    setFingerprintStage('idle')
+    setAttendanceError('')
+  }
+
+  const runAttendanceSimulation = async () => {
+    if (!data?.student.fingerprint_id) {
+     setFingerprintStage('error')
+      setAttendanceError('Fingerprint not registered. Please contact your admin.')
+      return
+    }
+
+    setFingerprintStage('place')
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    setFingerprintStage('scanning')
+    await new Promise(resolve => setTimeout(resolve, 1500))
+
+    // Mark attendance
+    setMarkingAttendance(true)
+    try {
+      // Get today's class (first enrolled class for simplicity)
+      if (classes.length === 0) {
+        setAttendanceError('No enrolled classes found.')
+        setFingerprintStage('error')
+        return
+      }
+
+      const today = new Date().toISOString().slice(0, 10)
+      const requestBody = {
+        classId: classes[0].id,
+        date: today,
+        status: 'PRESENT',
+      }
+      console.log('[Attendance Mark] Request body:', requestBody)
+      console.log('[Attendance Mark] studentId:', data.student.id)
+      console.log('[Attendance Mark] classId:', classes[0].id)
+
+      const res = await fetch('/api/student/attendance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      })
+
+      const responseData = await res.json()
+      console.log('[Attendance Mark] Response:', responseData)
+
+      if (!res.ok) {
+        setAttendanceError(responseData.error || 'Failed to mark attendance')
+        setFingerprintStage('error')
+        return
+      }
+
+      // Success - show verified state
+      setFingerprintStage('success')
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      setAttendanceModalOpen(false)
+      loadData() // Refresh data
+    } catch (error) {
+      console.error('[Attendance Mark] Error:', error)
+      setAttendanceError('Failed to mark attendance')
+      setFingerprintStage('error')
+    } finally {
+      setMarkingAttendance(false)
+    }
+  }
+
   const [year, monthNum] = month.split('-').map(Number)
 
   return (
@@ -177,6 +250,26 @@ export default function StudentDashboard() {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Mark Attendance Button */}
+              <Card className="bg-gradient-to-r from-blue-500 to-blue-600 border-0">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">Mark Today's Attendance</h3>
+                      <p className="text-blue-100 text-sm mt-1">Use your fingerprint to check in</p>
+                    </div>
+                    <Button
+                      onClick={openAttendanceModal}
+                      size="lg"
+                      className="bg-white text-blue-600 hover:bg-blue-50 font-semibold"
+                    >
+                      <Fingerprint className="w-5 h-5 mr-2" />
+                      Mark Attendance
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               <PushNotifications role="STUDENT" />
 
@@ -349,6 +442,90 @@ export default function StudentDashboard() {
         </div>
       </main>
       <AIAssistant role="STUDENT" />
+
+      {/* Attendance Modal */}
+      {attendanceModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-3xl bg-card p-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-semibold text-foreground">Mark Attendance</h3>
+                <p className="text-muted-foreground mt-1">Fingerprint verification</p>
+              </div>
+              <button onClick={() => setAttendanceModalOpen(false)} className="rounded-full bg-muted p-2 text-foreground hover:bg-muted/80">
+                ×
+              </button>
+            </div>
+
+            <div className="flex flex-col items-center py-8">
+              {fingerprintStage === 'idle' && (
+                <div className="flex flex-col items-center gap-4">
+                  <Fingerprint className="w-32 h-32 text-blue-500" />
+                  <p className="text-muted-foreground">Click below to start fingerprint scan</p>
+                  <button
+                    onClick={runAttendanceSimulation}
+                    disabled={markingAttendance}
+                    className="rounded-lg bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {markingAttendance ? 'Processing...' : 'Start Scan'}
+                  </button>
+                </div>
+              )}
+
+              {fingerprintStage === 'place' && (
+                <div className="flex flex-col items-center gap-4">
+                  <Fingerprint className="w-32 h-32 text-blue-500 animate-pulse" />
+                  <p className="text-lg font-semibold text-blue-600">Place finger on scanner...</p>
+                </div>
+              )}
+
+              {fingerprintStage === 'scanning' && (
+                <div className="flex flex-col items-center gap-4 relative">
+                  <div className="relative">
+                    <Fingerprint className="w-32 h-32 text-blue-500" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-1 bg-blue-400" style={{ animation: 'scan 1.5s linear forwards' }}></div>
+                    </div>
+                  </div>
+                  <p className="text-lg font-semibold text-blue-600">Scanning...</p>
+                  <style jsx>{`
+                    @keyframes scan {
+                      0% { transform: translateY(-64px); }
+                      100% { transform: translateY(64px); }
+                    }
+                  `}</style>
+                </div>
+              )}
+
+              {fingerprintStage === 'success' && (
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-32 h-32 rounded-full bg-green-500 flex items-center justify-center">
+                    <Check className="w-16 h-16 text-white" />
+                  </div>
+                  <p className="text-lg font-semibold text-green-600">Verified!</p>
+                  <p className="text-sm text-muted-foreground">Attendance marked successfully</p>
+                </div>
+              )}
+
+              {fingerprintStage === 'error' && (
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-32 h-32 rounded-full bg-red-500 flex items-center justify-center">
+                    <X className="w-16 h-16 text-white" />
+                  </div>
+                  <p className="text-lg font-semibold text-red-600">Error</p>
+                  <p className="text-sm text-muted-foreground text-center max-w-xs">{attendanceError}</p>
+                  <button
+                    onClick={() => setAttendanceModalOpen(false)}
+                    className="mt-2 rounded-lg border border-border px-4 py-2 text-foreground hover:bg-muted"
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

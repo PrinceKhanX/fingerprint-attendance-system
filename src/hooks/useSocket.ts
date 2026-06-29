@@ -16,11 +16,24 @@ interface AttendanceEvent {
 export function useSocket(classId: string | null, onAttendanceMarked: (event: AttendanceEvent) => void) {
   const [isConnected, setIsConnected] = useState(false)
   const socketRef = useRef<Socket | null>(null)
+  const callbackRef = useRef(onAttendanceMarked)
+
+  // Update callback ref without triggering socket reconnection
+  useEffect(() => {
+    callbackRef.current = onAttendanceMarked
+  }, [onAttendanceMarked])
 
   useEffect(() => {
     if (!classId) return
 
-    // Initialize socket connection
+    // Initialize socket connection only if not already connected for this class
+    if (socketRef.current?.connected) {
+      // If already connected, just join the new class
+      socketRef.current.emit('leave-class', classId)
+      socketRef.current.emit('join-class', classId)
+      return
+    }
+
     const socket = io('http://localhost:3000', {
       transports: ['websocket', 'polling'],
     })
@@ -39,19 +52,20 @@ export function useSocket(classId: string | null, onAttendanceMarked: (event: At
       setIsConnected(false)
     })
 
-    // Listen for attendance events
+    // Listen for attendance events using ref to avoid reconnection
     socket.on('attendance-marked', (event: AttendanceEvent) => {
       console.log('Attendance marked event received:', event)
-      onAttendanceMarked(event)
+      callbackRef.current(event)
     })
 
     return () => {
       if (socketRef.current) {
         socketRef.current.emit('leave-class', classId)
         socketRef.current.disconnect()
+        socketRef.current = null
       }
     }
-  }, [classId, onAttendanceMarked])
+  }, [classId]) // Only depend on classId, not onAttendanceMarked
 
   return { isConnected }
 }

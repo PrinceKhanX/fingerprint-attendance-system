@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
       role: true,
       student: {
         select: {
+          id: true,
           student_id: true,
           fingerprint_id: true,
           guardian_email: true,
