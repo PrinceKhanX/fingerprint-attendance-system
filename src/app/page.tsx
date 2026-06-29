@@ -61,10 +61,10 @@ export default function Home() {
               <Fingerprint className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-3 sm:mb-4">
-              Fingerprint Attendance
+              TrackPulse: A Biometric-Based Secure Attendance System
             </h1>
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto px-4">
-              Secure, efficient, and modern attendance tracking system. Select your role to get started.
+              Select your role to get started.
             </p>
           </div>
 

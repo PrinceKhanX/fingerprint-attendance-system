@@ -268,7 +268,13 @@ export default function TeacherAttendancePage() {
                     key={opt.value}
                     onClick={() => markAll(opt.value)}
                     disabled={students.length === 0}
-                    className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 transition disabled:opacity-50"
+                    className={`px-4 py-2 rounded-lg text-sm font-bold border-2 shadow-md hover:shadow-lg transition disabled:opacity-50 ${
+                      opt.value === 'PRESENT'
+                        ? 'bg-green-500 text-white border-green-600 hover:bg-green-600'
+                        : opt.value === 'LATE'
+                        ? 'bg-yellow-500 text-white border-yellow-600 hover:bg-yellow-600'
+                        : 'bg-red-500 text-white border-red-600 hover:bg-red-600'
+                    }`}
                   >
                     Mark all {opt.label.toLowerCase()}
                   </button>

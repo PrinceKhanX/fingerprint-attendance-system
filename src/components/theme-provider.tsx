@@ -28,11 +28,20 @@ export function ThemeProvider({
   storageKey = 'fingerprint-attendance-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (typeof window !== 'undefined' && (localStorage.getItem(storageKey) as Theme)) || defaultTheme
-  )
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+    const storedTheme = localStorage.getItem(storageKey) as Theme
+    if (storedTheme) {
+      setTheme(storedTheme)
+    }
+  }, [storageKey])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const root = window.document.documentElement
 
     root.classList.remove('light', 'dark')
@@ -41,7 +50,7 @@ export function ThemeProvider({
       root.classList.add(theme)
       localStorage.setItem(storageKey, theme)
     }
-  }, [theme, storageKey])
+  }, [theme, storageKey, mounted])
 
   const value = {
     theme,
