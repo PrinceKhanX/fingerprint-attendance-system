@@ -156,8 +156,26 @@ export async function POST(request: NextRequest) {
       },
       include: {
         class: { select: { name: true } },
+        student: {
+          include: {
+            user: { select: { name: true } },
+          },
+        },
       },
     })
+
+    // Emit Socket.io event to specific class room
+    if (global.io) {
+      global.io.to(`class:${classId}`).emit('attendance-marked', {
+        studentId: auth.studentId,
+        studentName: attendance.student.user.name,
+        classId,
+        className: attendance.class.name,
+        status: attendance.status,
+        timestamp: attendance.timestamp,
+        marked_by: 'SENSOR',
+      })
+    }
 
     return NextResponse.json({
       success: true,
@@ -182,8 +200,26 @@ export async function POST(request: NextRequest) {
     },
     include: {
       class: { select: { name: true } },
+      student: {
+        include: {
+          user: { select: { name: true } },
+        },
+      },
     },
   })
+
+  // Emit Socket.io event to specific class room
+  if (global.io) {
+    global.io.to(`class:${classId}`).emit('attendance-marked', {
+      studentId: auth.studentId,
+      studentName: attendance.student.user.name,
+      classId,
+      className: attendance.class.name,
+      status: attendance.status,
+      timestamp: attendance.timestamp,
+      marked_by: 'SENSOR',
+    })
+  }
 
   // Trigger notification if absent or late
   if (status === 'LATE' || status === 'ABSENT') {

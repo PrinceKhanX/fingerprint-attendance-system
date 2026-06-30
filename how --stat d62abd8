@@ -1,0 +1,15 @@
+[33mb3f1713[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fixed the hydration error, marking buttons with larger, bold paddings
+[33m2c46759[m updated readme
+[33md62abd8[m added email notification and fingerprint simulation
+[33mfa124e0[m feat: teacher dashboard and analytics UI improvements
+[33m272dfea[m Simplify AI Assistant to quick-action buttons only, disable free-text RapidAPI chat
+[33m813378c[m Added hybrid AI chatbot with Walnut and AI fallback
+[33mac6c332[m Update README with recent login page improvements and completed features
+[33m5220440[m Update email placeholder to change based on selected role
+[33m238a1f6[m Remove demo credentials section from login page
+[33m5c05d71[m Show bottom accent bar on mobile view for symmetry with top accent bar
+[33m99c9226[m Remove bottom accent bar from left branding column, keep only on right column below credentials
+[33m6f65393[m Add bottom accent bar to left branding column for symmetry with right column
+[33mf919dce[m Make bottom accent bar desktop-only for symmetry with top accent bar
+[33m130d31d[m Pull branding column content higher by changing from justify-center to justify-start
+[33ma492a28[m Fix login page: smooth gradient, align columns independently, add bottom accent bar for symmetry

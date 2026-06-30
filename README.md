@@ -1,4 +1,4 @@
-# 🔐 Fingerprint Attendance System
+# 🔐 TrackPulse: A Biometric-Based Secure Attendance System
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.3-blue?style=for-the-badge&logo=react)](https://react.dev/)
@@ -46,8 +46,11 @@ A modern, full-stack biometric attendance management system built with Next.js, 
 - Check class schedules
 - Real-time attendance status
 - Attendance statistics and trends
-- Fingerprint attendance marking with simulation
+- Per-class fingerprint attendance marking with simulation
+- Each enrolled class has its own "Mark Attendance" button
+- Button only shows for classes scheduled today (based on Class.schedule)
 - Override teacher-marked ABSENT/LATE to PRESENT via fingerprint
+- Socket.io events scoped to specific class rooms for real-time teacher dashboard updates
 
 #### 👨‍👩‍👧 Guardian
 - Monitor child's attendance in real-time
@@ -193,9 +196,9 @@ The application will be available at [http://localhost:3000](http://localhost:30
 | Role | Email | Password |
 |------|-------|----------|
 | **Admin** | admin@example.com | admin123 |
-| **Teacher** | teacher@example.com | teacher123 |
-| **Student** | student@example.com | student123 |
-| **Guardian** | guardian@example.com | guardian123 |
+| **Teacher** | mubin@example.com, biplob@example.com, jamil@example.com, rayhan@example.com | teacher123 |
+| **Student** | sajid@example.com, ishfar@example.com, tasfir@example.com (and 12 more) | student123 |
+| **Guardian** | guardian.sajid@example.com, guardian.ishfar@example.com, guardian.tasfir@example.com (and 12 more) | guardian123 |
 
 ---
 
@@ -509,10 +512,14 @@ For support, email support@fingerprint-attendance.com or open an issue in the re
   - PATCH API endpoint for updating student fingerprint_id
   - Visual feedback with scan line animation
 - ✅ Fingerprint attendance marking simulation for students
-  - "Mark Attendance" button on student dashboard
+  - Per-class "Mark Attendance" buttons on student dashboard
+  - Each enrolled class has its own attendance marking button
+  - Button only shows for classes scheduled today (based on Class.schedule field)
   - Multi-stage animation with "Verified!" state after successful API response
   - POST API endpoint for student attendance marking
   - Error handling with actual API error messages displayed
+  - Socket.io events emitted to specific class rooms (class:{classId})
+  - Real-time updates only to the relevant teacher's dashboard
 - ✅ Email notification system with professional HTML templates
   - Attendance alerts for LATE and ABSENT status
   - Color-coded HTML emails (red for ABSENT, orange for LATE)

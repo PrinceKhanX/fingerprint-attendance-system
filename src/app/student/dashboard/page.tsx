@@ -2,12 +2,13 @@
 
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Fingerprint, Check, X } from 'lucide-react'
+import { Fingerprint, Check, X, Clock } from 'lucide-react'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import PushNotifications from '@/components/PushNotifications'
 import { AIAssistant } from '@/components/AIAssistant'
+import { isClassScheduledToday } from '@/lib/schedule'
 
 type DayStatus = 'PRESENT' | 'LATE' | 'ABSENT'
 
@@ -77,6 +78,7 @@ export default function StudentDashboard() {
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [userName, setUserName] = useState('')
   const [attendanceModalOpen, setAttendanceModalOpen] = useState(false)
+  const [selectedClassForAttendance, setSelectedClassForAttendance] = useState<ClassItem | null>(null)
   const [fingerprintStage, setFingerprintStage] = useState<'idle' | 'place' | 'scanning' | 'success' | 'error'>('idle')
   const [attendanceError, setAttendanceError] = useState('')
   const [markingAttendance, setMarkingAttendance] = useState(false)
@@ -133,7 +135,8 @@ export default function StudentDashboard() {
     }
   }
 
-  const openAttendanceModal = () => {
+  const openAttendanceModal = (classItem: ClassItem) => {
+    setSelectedClassForAttendance(classItem)
     setAttendanceModalOpen(true)
     setFingerprintStage('idle')
     setAttendanceError('')
@@ -146,31 +149,31 @@ export default function StudentDashboard() {
       return
     }
 
+    if (!selectedClassForAttendance) {
+      setAttendanceError('No class selected for attendance.')
+      setFingerprintStage('error')
+      return
+    }
+
     setFingerprintStage('place')
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     setFingerprintStage('scanning')
     await new Promise(resolve => setTimeout(resolve, 1500))
 
     // Mark attendance
     setMarkingAttendance(true)
     try {
-      // Get today's class (first enrolled class for simplicity)
-      if (classes.length === 0) {
-        setAttendanceError('No enrolled classes found.')
-        setFingerprintStage('error')
-        return
-      }
-
       const today = new Date().toISOString().slice(0, 10)
       const requestBody = {
-        classId: classes[0].id,
+        classId: selectedClassForAttendance.id,
         date: today,
         status: 'PRESENT',
       }
       console.log('[Attendance Mark] Request body:', requestBody)
       console.log('[Attendance Mark] studentId:', data.student.id)
-      console.log('[Attendance Mark] classId:', classes[0].id)
+      console.log('[Attendance Mark] classId:', selectedClassForAttendance.id)
+      console.log('[Attendance Mark] className:', selectedClassForAttendance.name)
 
       const res = await fetch('/api/student/attendance', {
         method: 'POST',
@@ -191,6 +194,7 @@ export default function StudentDashboard() {
       setFingerprintStage('success')
       await new Promise(resolve => setTimeout(resolve, 1000))
       setAttendanceModalOpen(false)
+      setSelectedClassForAttendance(null)
       loadData() // Refresh data
     } catch (error) {
       console.error('[Attendance Mark] Error:', error)
@@ -251,50 +255,54 @@ export default function StudentDashboard() {
                 </Card>
               </div>
 
-              {/* Mark Attendance Button */}
-              <Card className="bg-gradient-to-r from-blue-500 to-blue-600 border-0">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Mark Today's Attendance</h3>
-                      <p className="text-blue-100 text-sm mt-1">Use your fingerprint to check in</p>
-                    </div>
-                    <Button
-                      onClick={openAttendanceModal}
-                      size="lg"
-                      className="bg-white text-blue-600 hover:bg-blue-50 font-semibold"
-                    >
-                      <Fingerprint className="w-5 h-5 mr-2" />
-                      Mark Attendance
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <PushNotifications role="STUDENT" />
-
+              {/* Class Cards with Attendance Buttons */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-foreground">Class Timetable</CardTitle>
+                  <CardTitle className="text-lg font-semibold text-foreground">Today's Classes</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {classes.length === 0 ? (
                     <p className="text-sm text-muted-foreground">No enrolled classes</p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {classes.map((c) => (
-                        <div key={c.id} className="rounded-lg border border-border px-4 py-4">
-                          <p className="font-semibold text-foreground">{c.name}</p>
-                          <p className="text-sm text-primary mt-1">{c.schedule}</p>
-                          <p className="text-sm text-muted-foreground mt-2">
-                            Teacher: {c.teacher.name}
-                          </p>
-                        </div>
-                      ))}
+                      {classes.map((c) => {
+                        const isScheduledToday = isClassScheduledToday(c.schedule)
+                        return (
+                          <div key={c.id} className="rounded-lg border border-border px-4 py-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="font-semibold text-foreground">{c.name}</p>
+                                <p className="text-sm text-primary mt-1">{c.schedule}</p>
+                                <p className="text-sm text-muted-foreground mt-2">
+                                  Teacher: {c.teacher.name}
+                                </p>
+                              </div>
+                              {isScheduledToday && (
+                                <Button
+                                  onClick={() => openAttendanceModal(c)}
+                                  size="sm"
+                                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                                >
+                                  <Fingerprint className="w-4 h-4 mr-2" />
+                                  Mark Attendance
+                                </Button>
+                              )}
+                            </div>
+                            {!isScheduledToday && (
+                              <div className="flex items-center gap-1.5 mt-3 text-sm text-muted-foreground">
+                                <Clock className="w-4 h-4" />
+                                <span>Not scheduled today</span>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
                 </CardContent>
               </Card>
+
+              <PushNotifications role="STUDENT" />
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2">
@@ -451,6 +459,11 @@ export default function StudentDashboard() {
               <div>
                 <h3 className="text-xl font-semibold text-foreground">Mark Attendance</h3>
                 <p className="text-muted-foreground mt-1">Fingerprint verification</p>
+                {selectedClassForAttendance && (
+                  <p className="text-sm text-primary font-medium mt-2">
+                    {selectedClassForAttendance.name}
+                  </p>
+                )}
               </div>
               <button onClick={() => setAttendanceModalOpen(false)} className="rounded-full bg-muted p-2 text-foreground hover:bg-muted/80">
                 ×
